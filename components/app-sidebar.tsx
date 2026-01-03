@@ -1,7 +1,7 @@
 "use client"
 
 import * as React from "react"
-import { Home, Music, Heart, Folder, Plus, Settings, Palette, LogOut, User, MoreVertical } from "lucide-react"
+import { Home, Music, Heart, Folder, Plus, Settings, Palette, LogOut, User, MoreVertical, ChevronDown, HelpCircle } from "lucide-react"
 import { useTheme } from "next-themes"
 
 import {
@@ -21,7 +21,6 @@ import {
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
-import { SidebarToggle } from "./sidebar-toggle"
 
 const navigationItems = [
   { id: "home", title: "Início", icon: Home },
@@ -54,8 +53,15 @@ export function AppSidebar({ currentView, onNavigate, ...props }: AppSidebarProp
           <Music className="size-6" />
           <span className="group-data-[collapsible=icon]:hidden">ChordMaster</span>
         </div>
+        <div className="ml-auto group-data-[collapsible=icon]:hidden">
+          <Button variant="ghost" size="icon-sm" className="text-muted-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground">
+            <ChevronDown className="size-4" />
+          </Button>
+        </div>
       </SidebarHeader>
+      
       <SidebarContent>
+        {/* Grupo 1: Navegação Principal */}
         <SidebarGroup>
           <SidebarGroupLabel>Navegação</SidebarGroupLabel>
           <SidebarGroupContent>
@@ -75,45 +81,62 @@ export function AppSidebar({ currentView, onNavigate, ...props }: AppSidebarProp
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
+
+        {/* Grupo 2: Ferramentas e Utilidades */}
+        <SidebarGroup>
+          <SidebarGroupLabel>Ferramentas</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              <SidebarMenuItem>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <SidebarMenuButton tooltip="Tema">
+                      <Palette />
+                      <span>Tema</span>
+                      <ChevronDown className="size-4 ml-auto group-data-[collapsible=icon]:hidden" />
+                    </SidebarMenuButton>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="start" side="right" sideOffset={isCollapsed ? 12 : 0}>
+                    <DropdownMenuItem onClick={() => setTheme("light")}>Claro</DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => setTheme("dark")}>Escuro</DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => setTheme("system")}>Sistema</DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton tooltip="Ajuda">
+                  <HelpCircle />
+                  <span>Ajuda</span>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+
+        {/* Grupo 3: Configurações */}
+        <SidebarGroup>
+          <SidebarGroupLabel>Configurações</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              <SidebarMenuItem>
+                <SidebarMenuButton
+                  onClick={() => onNavigate("settings")}
+                  isActive={currentView === "settings"}
+                  tooltip="Configurações"
+                >
+                  <Settings />
+                  <span>Configurações</span>
+                  <ChevronDown className="size-4 ml-auto group-data-[collapsible=icon]:hidden" />
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
       </SidebarContent>
 
-      <SidebarFooter className="border-t border-sidebar-border p-2 space-y-2">
-        {/* Utility Row (Settings, Theme, Toggle) */}
-        <div className="flex items-end justify-between">
-          <SidebarMenu className="flex-col flex-1"> {/* Alterado para flex-col */}
-            <SidebarMenuItem>
-              <SidebarMenuButton
-                onClick={() => onNavigate("settings")}
-                isActive={currentView === "settings"}
-                tooltip="Configurações"
-              >
-                <Settings />
-                <span>Configurações</span>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-            <SidebarMenuItem>
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <SidebarMenuButton tooltip="Tema">
-                    <Palette />
-                    <span>Tema</span>
-                  </SidebarMenuButton>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="start" side="right" sideOffset={isCollapsed ? 12 : 0}>
-                  <DropdownMenuItem onClick={() => setTheme("light")}>Claro</DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => setTheme("dark")}>Escuro</DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => setTheme("system")}>Sistema</DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </SidebarMenuItem>
-          </SidebarMenu>
-          <div className="group-data-[collapsible=icon]:hidden">
-            <SidebarToggle />
-          </div>
-        </div>
-
-        {/* User Profile Row */}
-        <div className="flex items-center gap-2">
+      <SidebarFooter className="border-t border-sidebar-border p-2">
+        {/* User Profile Row - Simplified */}
+        <div className="flex items-center gap-2 p-2 rounded-md hover:bg-sidebar-accent">
           <Avatar className="size-8 shrink-0">
             <AvatarFallback className="bg-primary text-primary-foreground text-xs">
               {mockUser.initials}
@@ -128,10 +151,10 @@ export function AppSidebar({ currentView, onNavigate, ...props }: AppSidebarProp
               <Button
                 variant="ghost"
                 size="icon-sm"
-                className="text-muted-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground shrink-0"
+                className="text-muted-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground shrink-0 group-data-[collapsible=icon]:size-8 group-data-[collapsible=icon]:p-0"
                 tooltip="Opções de Usuário"
               >
-                <MoreVertical className="size-4" />
+                <ChevronDown className="size-4" />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" side="top" sideOffset={8}>
