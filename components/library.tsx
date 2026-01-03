@@ -63,22 +63,22 @@ export function Library({
   }
 
   return (
-    <div className="p-6 pt-20 md:pt-20">
-      <div className="mb-6">
-        <h2 className="text-3xl font-bold text-foreground mb-4">{title}</h2>
+    <div className="px-6 md:px-10 py-8">
+      <div className="mb-8">
+        <h2 className="text-3xl font-bold text-foreground mb-6">{title}</h2>
 
         {showFolderManager && (
-          <div className="mb-6">
+          <div className="mb-8">
             <div className="flex items-center gap-2 mb-4">
               <h3 className="text-lg font-semibold text-muted-foreground">Your Folders</h3>
               <Dialog open={isCreatingFolder} onOpenChange={setIsCreatingFolder}>
                 <DialogTrigger asChild>
-                  <Button size="sm" className="bg-primary hover:bg-primary/90 text-primary-foreground">
+                  <Button size="sm" className="bg-primary hover:bg-primary/90 text-primary-foreground rounded-sm">
                     <Plus className="w-4 h-4 mr-2" />
                     New Folder
                   </Button>
                 </DialogTrigger>
-                <DialogContent className="bg-card border-border">
+                <DialogContent className="bg-card border-border rounded-sm">
                   <DialogHeader>
                     <DialogTitle className="text-foreground">Create New Folder</DialogTitle>
                   </DialogHeader>
@@ -86,13 +86,13 @@ export function Library({
                     placeholder="Folder name (e.g., Camping Songs)"
                     value={newFolderName}
                     onChange={(e) => setNewFolderName(e.target.value)}
-                    className="bg-secondary border-border text-foreground placeholder:text-muted-foreground"
+                    className="bg-secondary border-border text-foreground placeholder:text-muted-foreground rounded-sm"
                     onKeyDown={(e) => e.key === "Enter" && handleCreateFolder()}
                   />
                   <DialogFooter>
                     <Button
                       onClick={handleCreateFolder}
-                      className="bg-primary hover:bg-primary/90 text-primary-foreground"
+                      className="bg-primary hover:bg-primary/90 text-primary-foreground rounded-sm"
                     >
                       Create Folder
                     </Button>
@@ -106,7 +106,7 @@ export function Library({
                 variant="outline"
                 size="sm"
                 className={cn(
-                  "border-border text-muted-foreground hover:bg-accent hover:text-foreground",
+                  "border-border text-muted-foreground hover:bg-accent hover:text-foreground rounded-sm",
                   !selectedFolder && "bg-primary/10 text-primary border-primary/50 hover:text-primary",
                 )}
                 onClick={() => onSelectFolder?.(null)}
@@ -119,7 +119,7 @@ export function Library({
                     variant="outline"
                     size="sm"
                     className={cn(
-                      "border-border text-muted-foreground hover:bg-accent hover:text-foreground",
+                      "border-border text-muted-foreground hover:bg-accent hover:text-foreground rounded-sm",
                       selectedFolder === folder.id && "bg-primary/10 text-primary border-primary/50 hover:text-primary",
                     )}
                     onClick={() => onSelectFolder?.(folder.id)}
@@ -129,7 +129,7 @@ export function Library({
                   <Button
                     variant="ghost"
                     size="icon"
-                    className="h-8 w-8 text-muted-foreground hover:text-destructive hover:bg-destructive/10"
+                    className="h-8 w-8 text-muted-foreground hover:text-destructive hover:bg-destructive/10 rounded-sm"
                     onClick={() => onDeleteFolder?.(folder.id)}
                   >
                     <X className="w-4 h-4" />
@@ -146,25 +146,25 @@ export function Library({
             placeholder="Search by title or artist..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-10 bg-secondary border-border text-foreground placeholder:text-muted-foreground"
+            className="pl-10 bg-secondary border-border text-foreground placeholder:text-muted-foreground rounded-sm h-11"
           />
         </div>
       </div>
 
       {filteredSongs.length === 0 ? (
-        <div className="text-center py-12 text-muted-foreground">
-          <Music className="w-16 h-16 mx-auto mb-4 opacity-50" />
+        <div className="text-center py-16 text-muted-foreground">
+          <MusicIcon className="w-16 h-16 mx-auto mb-4 opacity-50" />
           <p className="text-lg">No songs found</p>
           <p className="text-sm">Try adjusting your search or add some songs</p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredSongs.map((song) => (
             <Card
               key={song.id}
-              className="bg-card border-border hover:border-primary/50 transition-colors cursor-pointer group"
+              className="bg-card border-border hover:border-primary/50 transition-all cursor-pointer group rounded-sm shadow-sm hover:shadow-md"
             >
-              <CardHeader className="pb-3">
+              <CardHeader className="pb-3 pt-5 px-5">
                 <div className="flex items-start justify-between gap-2">
                   <div className="flex-1 min-w-0" onClick={() => onViewSong(song)}>
                     <CardTitle className="text-foreground text-lg mb-1 truncate">{song.title}</CardTitle>
@@ -175,7 +175,7 @@ export function Library({
                       variant="ghost"
                       size="icon"
                       className={cn(
-                        "h-8 w-8",
+                        "h-8 w-8 rounded-sm",
                         song.isFavorite
                           ? "text-primary hover:text-primary/80"
                           : "text-muted-foreground hover:text-primary",
@@ -190,14 +190,14 @@ export function Library({
                   </div>
                 </div>
               </CardHeader>
-              <CardContent onClick={() => onViewSong(song)}>
+              <CardContent className="px-5 pb-5" onClick={() => onViewSong(song)}>
                 <div className="flex items-center justify-between">
                   <div className="flex flex-wrap gap-1">
-                    <Badge variant="secondary" className="bg-secondary text-secondary-foreground text-xs">
+                    <Badge variant="secondary" className="bg-secondary text-secondary-foreground text-xs rounded-sm">
                       Key: {song.key}
                     </Badge>
                     {song.tags.map((tag) => (
-                      <Badge key={tag} variant="outline" className="border-border text-muted-foreground text-xs">
+                      <Badge key={tag} variant="outline" className="border-border text-muted-foreground text-xs rounded-sm">
                         {tag}
                       </Badge>
                     ))}
@@ -207,7 +207,7 @@ export function Library({
                       <Button
                         variant="ghost"
                         size="icon"
-                        className="h-8 w-8 text-muted-foreground hover:text-primary"
+                        className="h-8 w-8 text-muted-foreground hover:text-primary rounded-sm"
                         onClick={(e) => {
                           e.stopPropagation()
                           onRemoveSongFromFolder(song.id, selectedFolder)
@@ -221,13 +221,13 @@ export function Library({
                         <Button
                           variant="ghost"
                           size="icon"
-                          className="h-8 w-8 text-muted-foreground hover:text-primary"
+                          className="h-8 w-8 text-muted-foreground hover:text-primary rounded-sm"
                           onClick={(e) => e.stopPropagation()}
                         >
                           <FolderPlus className="w-4 h-4" />
                         </Button>
                       </DropdownMenuTrigger>
-                      <DropdownMenuContent className="bg-card border-border">
+                      <DropdownMenuContent className="bg-card border-border rounded-sm">
                         {folders.length === 0 ? (
                           <div className="px-2 py-1.5 text-sm text-muted-foreground">No folders yet</div>
                         ) : (
@@ -238,7 +238,7 @@ export function Library({
                                 e.stopPropagation()
                                 onAddSongToFolder(song.id, folder.id)
                               }}
-                              className="text-foreground hover:bg-accent focus:bg-accent"
+                              className="text-foreground hover:bg-accent focus:bg-accent cursor-pointer"
                             >
                               {folder.name}
                             </DropdownMenuItem>
@@ -249,7 +249,7 @@ export function Library({
                     <Button
                       variant="ghost"
                       size="icon"
-                      className="h-8 w-8 text-muted-foreground hover:text-destructive"
+                      className="h-8 w-8 text-muted-foreground hover:text-destructive rounded-sm"
                       onClick={(e) => {
                         e.stopPropagation()
                         if (confirm("Are you sure you want to delete this song?")) {
@@ -270,7 +270,7 @@ export function Library({
   )
 }
 
-function Music({ className }: { className?: string }) {
+function MusicIcon({ className }: { className?: string }) {
   return (
     <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor">
       <path

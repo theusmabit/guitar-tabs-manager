@@ -87,68 +87,64 @@ export function SongViewer({ song, onUpdateSong, onBack }: SongViewerProps) {
 
   return (
     <div className="min-h-screen bg-background">
-      <div className="pt-16 pb-20">
-        <div className="max-w-7xl mx-auto px-4 md:px-6 lg:px-8">
-          <div className="flex gap-6">
-            {leftSidebarOpen && (
-              <div className="hidden lg:block w-16 space-y-4">
-                <div className="sticky top-20">{/* Quick actions */}</div>
-              </div>
-            )}
-
+      <div className="py-8">
+        <div className="max-w-7xl mx-auto px-6 md:px-10 lg:px-12">
+          <div className="flex gap-8">
             <div className="flex-1 max-w-4xl">
-              <div className="flex items-start gap-4 mb-4">
-                <div className="w-20 h-20 bg-primary/10 rounded-lg flex items-center justify-center flex-shrink-0">
+              <div className="flex items-start gap-5 mb-6">
+                <div className="w-20 h-20 bg-primary/10 rounded-lg flex items-center justify-center flex-shrink-0 shadow-sm">
                   <svg className="w-10 h-10 text-primary" fill="currentColor" viewBox="0 0 20 20">
                     <path d="M18 3a1 1 0 00-1.196-.98l-10 2A1 1 0 006 5v9.114A4.369 4.369 0 005 14c-1.657 0-3 .895-3 2s1.343 2 3 2 3-.895 3-2V7.82l8-1.6v5.894A4.37 4.37 0 0015 12c-1.657 0-3 .895-3 2s1.343 2 3 2 3-.895 3-2V3z" />
                   </svg>
                 </div>
-                <div className="flex-1 min-w-0">
-                  <h1 className="text-4xl font-bold text-foreground mb-1">{song.title}</h1>
+                <div className="flex-1 min-w-0 pt-1">
+                  <h1 className="text-4xl font-bold text-foreground mb-1 leading-tight">{song.title}</h1>
                   <p className="text-lg text-muted-foreground">{song.artist}</p>
                 </div>
               </div>
 
-              <div className="flex items-center justify-between border-y border-border bg-card/30 py-3 px-4">
+              <div className="flex items-center justify-between border-y border-border bg-card/30 py-4 px-6 rounded-sm">
                 <div className="flex items-center gap-3">
                   <Button
                     variant={isSaved ? "default" : "outline"}
                     size="sm"
                     onClick={() => setIsSaved(!isSaved)}
-                    className="rounded-sm h-9"
+                    className="rounded-sm h-9 px-4"
                   >
-                    <Heart className={`w-3.5 h-3.5 mr-1.5 ${isSaved ? "fill-current" : ""}`} />
+                    <Heart className={`w-3.5 h-3.5 mr-2 ${isSaved ? "fill-current" : ""}`} />
                     {isSaved ? "Saved" : "Save"}
                   </Button>
 
-                  <Button variant="outline" size="sm" className="rounded-sm h-9 bg-transparent">
-                    <Plus className="w-3.5 h-3.5 mr-1.5" />
+                  <Button variant="outline" size="sm" className="rounded-sm h-9 px-4 bg-transparent">
+                    <Plus className="w-3.5 h-3.5 mr-2" />
                     Add to Setlist
-                    <ChevronDown className="w-3.5 h-3.5 ml-1.5" />
+                    <ChevronDown className="w-3.5 h-3.5 ml-2" />
                   </Button>
                 </div>
 
-                <div className="flex items-center gap-2">
-                  <span className="text-sm font-medium text-foreground">Chords:</span>
-                  {uniqueChords.slice(0, 4).map((chord, index) => (
-                    <Badge
-                      key={index}
-                      variant="outline"
-                      className="rounded-sm border-primary/30 bg-primary/5 text-primary text-sm px-2.5 py-0.5 font-medium"
-                    >
-                      {chord}
-                    </Badge>
-                  ))}
-                  {uniqueChords.length > 4 && (
-                    <span className="text-sm text-muted-foreground">+{uniqueChords.length - 4}</span>
-                  )}
+                <div className="flex items-center gap-3">
+                  <span className="text-sm font-semibold text-foreground">Chords:</span>
+                  <div className="flex gap-1.5">
+                    {uniqueChords.slice(0, 4).map((chord, index) => (
+                      <Badge
+                        key={index}
+                        variant="outline"
+                        className="rounded-sm border-primary/20 bg-primary/5 text-primary text-sm px-2.5 py-0.5 font-medium"
+                      >
+                        {chord}
+                      </Badge>
+                    ))}
+                    {uniqueChords.length > 4 && (
+                      <span className="text-sm text-muted-foreground font-medium self-center">+{uniqueChords.length - 4}</span>
+                    )}
+                  </div>
                 </div>
               </div>
 
-              {twoColumnMode ? (
-                <Card className="rounded-sm border-border shadow-none mt-4">
-                  <CardContent className="p-6 md:p-8">
-                    <div className="grid grid-cols-2 gap-8">
+              <Card className="rounded-sm border-border shadow-sm mt-6">
+                <CardContent className="p-8 md:p-10">
+                  {twoColumnMode ? (
+                    <div className="grid grid-cols-2 gap-12">
                       <div>
                         <pre
                           className="font-mono whitespace-pre-wrap leading-relaxed"
@@ -166,20 +162,16 @@ export function SongViewer({ song, onUpdateSong, onBack }: SongViewerProps) {
                         </pre>
                       </div>
                     </div>
-                  </CardContent>
-                </Card>
-              ) : (
-                <Card className="rounded-sm border-border shadow-none mt-4">
-                  <CardContent className="p-6 md:p-8">
+                  ) : (
                     <pre
                       className="font-mono whitespace-pre-wrap leading-relaxed"
                       style={{ fontSize: `${textSize}px` }}
                     >
                       {renderLyricsWithChords(transposedContent)}
                     </pre>
-                  </CardContent>
-                </Card>
-              )}
+                  )}
+                </CardContent>
+              </Card>
             </div>
 
             <div className="hidden lg:flex items-start pt-8">
@@ -187,31 +179,29 @@ export function SongViewer({ song, onUpdateSong, onBack }: SongViewerProps) {
                 variant="ghost"
                 size="icon"
                 onClick={() => setRightSidebarOpen(!rightSidebarOpen)}
-                className="h-8 w-8 rounded-sm"
+                className="h-9 w-9 rounded-sm bg-secondary/30 hover:bg-secondary/50"
               >
                 {rightSidebarOpen ? <ChevronRight className="w-4 h-4" /> : <ChevronLeft className="w-4 h-4" />}
               </Button>
             </div>
 
             {rightSidebarOpen && (
-              <div className="hidden lg:block w-80 space-y-4">
-                <div className="sticky top-20 space-y-4">
-                  {/* Music Player in the Sidebar */}
+              <div className="hidden lg:block w-80 space-y-5">
+                <div className="sticky top-20 space-y-5">
                   <MusicPlayer song={song} />
 
-                  <Card className="rounded-sm border-border shadow-none">
-                    <CardContent className="p-4 space-y-6">
-                      {/* Transpose Control */}
-                      <div className="space-y-2">
-                        <label className="text-[10px] uppercase font-bold text-muted-foreground tracking-tight">Transpose</label>
-                        <div className="flex items-center gap-1 bg-secondary/50 p-1 rounded-sm border border-border">
+                  <Card className="rounded-sm border-border shadow-sm">
+                    <CardContent className="px-5 py-5 space-y-5">
+                      <div className="space-y-2.5">
+                        <label className="text-[10px] uppercase font-bold text-muted-foreground tracking-widest">Transpose</label>
+                        <div className="flex items-center gap-1 bg-secondary/40 p-1.5 rounded-sm border border-border">
                           <Button
                             variant="ghost"
                             size="sm"
                             onClick={() => setTranspose((t) => t - 1)}
                             className="h-8 w-8 p-0 rounded-sm hover:bg-background"
                           >
-                            <Minus className="w-3 h-3" />
+                            <Minus className="w-3.5 h-3.5" />
                           </Button>
                           <span className="text-xs font-bold flex-1 text-center">
                             {transpose === 0 ? "Original" : transpose > 0 ? `+${transpose}` : transpose}
@@ -222,36 +212,36 @@ export function SongViewer({ song, onUpdateSong, onBack }: SongViewerProps) {
                             onClick={() => setTranspose((t) => t + 1)}
                             className="h-8 w-8 p-0 rounded-sm hover:bg-background"
                           >
-                            <Plus className="w-3 h-3" />
+                            <Plus className="w-3.5 h-3.5" />
                           </Button>
                         </div>
                       </div>
 
-                      {/* Tool Grid */}
-                      <div className="grid grid-cols-2 gap-2">
-                        {/* Auto-scroll */}
-                        <div className="space-y-2">
-                          <label className="text-[10px] uppercase font-bold text-muted-foreground tracking-tight">Auto-scroll</label>
-                          <div className="flex gap-1">
+                      <div className="grid grid-cols-2 gap-3">
+                        <div className="space-y-2.5">
+                          <label className="text-[10px] uppercase font-bold text-muted-foreground tracking-widest">Auto-scroll</label>
+                          <div className="flex gap-1.5">
                             <Button
                               variant={autoScroll ? "default" : "outline"}
                               size="sm"
                               onClick={() => setAutoScroll(!autoScroll)}
-                              className="flex-1 rounded-sm h-10 px-0"
+                              className="flex-1 rounded-sm h-10 px-0 shadow-none"
                             >
                               {autoScroll ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
                             </Button>
                             <Popover>
                               <PopoverTrigger asChild>
-                                <Button variant="outline" size="sm" className="h-10 w-10 p-0 rounded-sm">
-                                  <ChevronDown className="w-3 h-3" />
+                                <Button variant="outline" size="sm" className="h-10 w-10 p-0 rounded-sm shadow-none">
+                                  <ChevronDown className="w-3.5 h-3.5" />
                                 </Button>
                               </PopoverTrigger>
-                              <PopoverContent className="w-48 p-3 bg-card border-border">
-                                <div className="space-y-2">
-                                  <div className="flex justify-between">
-                                    <span className="text-xs font-medium">Speed</span>
-                                    <span className="text-xs text-primary font-bold">{scrollSpeed}</span>
+                              <PopoverContent className="w-56 p-4 bg-card border-border shadow-md rounded-sm">
+                                <div className="space-y-3">
+                                  <div className="flex justify-between items-center">
+                                    <span className="text-xs font-bold">Scroll Speed</span>
+                                    <Badge variant="secondary" className="text-xs font-mono font-bold rounded-sm px-1.5">
+                                      {scrollSpeed}
+                                    </Badge>
                                   </div>
                                   <input
                                     type="range"
@@ -267,35 +257,33 @@ export function SongViewer({ song, onUpdateSong, onBack }: SongViewerProps) {
                           </div>
                         </div>
 
-                        {/* Layout Toggle */}
-                        <div className="space-y-2">
-                          <label className="text-[10px] uppercase font-bold text-muted-foreground tracking-tight">Layout</label>
+                        <div className="space-y-2.5">
+                          <label className="text-[10px] uppercase font-bold text-muted-foreground tracking-widest">Layout</label>
                           <Button
                             variant={twoColumnMode ? "default" : "outline"}
                             size="sm"
                             onClick={() => setTwoColumnMode(!twoColumnMode)}
-                            className="w-full rounded-sm h-10"
+                            className="w-full rounded-sm h-10 shadow-none"
                           >
                             <Columns2 className="w-4 h-4" />
                           </Button>
                         </div>
                       </div>
 
-                      {/* Text Size Control */}
-                      <div className="space-y-2">
-                        <label className="text-[10px] uppercase font-bold text-muted-foreground tracking-tight">Text Appearance</label>
-                        <div className="flex items-center gap-2 bg-secondary/50 p-1 rounded-sm border border-border">
+                      <div className="space-y-2.5">
+                        <label className="text-[10px] uppercase font-bold text-muted-foreground tracking-widest">Text Size</label>
+                        <div className="flex items-center gap-2 bg-secondary/40 p-1.5 rounded-sm border border-border">
                           <Button
                             variant="ghost"
                             size="sm"
                             onClick={() => setTextSize(Math.max(10, textSize - 1))}
                             className="h-8 w-8 p-0 rounded-sm hover:bg-background"
                           >
-                            <Minus className="w-3 h-3" />
+                            <Minus className="w-3.5 h-3.5" />
                           </Button>
-                          <div className="flex-1 flex items-center justify-center gap-1.5">
-                            <Type className="w-3 h-3 text-muted-foreground" />
-                            <span className="text-xs font-bold">{textSize}px</span>
+                          <div className="flex-1 flex items-center justify-center gap-2">
+                            <Type className="w-3.5 h-3.5 text-muted-foreground" />
+                            <span className="text-xs font-bold font-mono">{textSize}px</span>
                           </div>
                           <Button
                             variant="ghost"
@@ -303,30 +291,30 @@ export function SongViewer({ song, onUpdateSong, onBack }: SongViewerProps) {
                             onClick={() => setTextSize(Math.min(32, textSize + 1))}
                             className="h-8 w-8 p-0 rounded-sm hover:bg-background"
                           >
-                            <Plus className="w-3 h-3" />
+                            <Plus className="w-3.5 h-3.5" />
                           </Button>
                         </div>
                       </div>
                     </CardContent>
                   </Card>
 
-                  <Card className="rounded-sm border-border shadow-none">
+                  <Card className="rounded-sm border-border shadow-sm overflow-hidden">
                     <Tabs defaultValue="tuner" className="w-full">
-                      <TabsList className="w-full grid grid-cols-2 rounded-sm h-9 px-4 bg-transparent">
-                        <TabsTrigger value="tuner" className="rounded-sm text-xs">
+                      <TabsList className="w-full grid grid-cols-2 rounded-none h-10 px-0 bg-secondary/20 border-b border-border">
+                        <TabsTrigger value="tuner" className="rounded-none text-xs font-bold uppercase tracking-tight data-[state=active]:bg-card">
                           Tuner
                         </TabsTrigger>
-                        <TabsTrigger value="metronome" className="rounded-sm text-xs">
+                        <TabsTrigger value="metronome" className="rounded-none text-xs font-bold uppercase tracking-tight data-[state=active]:bg-card">
                           Metronome
                         </TabsTrigger>
                       </TabsList>
                       <TabsContent value="tuner" className="mt-0">
-                        <CardContent className="pt-4 px-4 pb-4">
+                        <CardContent className="p-5">
                           <Tuner />
                         </CardContent>
                       </TabsContent>
                       <TabsContent value="metronome" className="mt-0">
-                        <CardContent className="pt-4 px-4 pb-4">
+                        <CardContent className="p-5">
                           <Metronome />
                         </CardContent>
                       </TabsContent>
@@ -344,70 +332,57 @@ export function SongViewer({ song, onUpdateSong, onBack }: SongViewerProps) {
           <DialogHeader>
             <DialogTitle className="text-foreground">Edit Song</DialogTitle>
           </DialogHeader>
-          <div className="space-y-4">
+          <div className="space-y-5 px-1 py-2">
             <div>
-              <Label htmlFor="title" className="text-muted-foreground">
-                Title
-              </Label>
+              <Label htmlFor="title" className="text-xs font-bold uppercase text-muted-foreground mb-1.5 block">Title</Label>
               <Input
                 id="title"
                 value={editForm.title}
                 onChange={(e) => setEditForm({ ...editForm, title: e.target.value })}
-                className="bg-secondary border-border text-foreground rounded-sm"
+                className="bg-secondary/50 border-border text-foreground rounded-sm h-10"
               />
             </div>
             <div>
-              <Label htmlFor="artist" className="text-muted-foreground">
-                Artist
-              </Label>
+              <Label htmlFor="artist" className="text-xs font-bold uppercase text-muted-foreground mb-1.5 block">Artist</Label>
               <Input
                 id="artist"
                 value={editForm.artist}
                 onChange={(e) => setEditForm({ ...editForm, artist: e.target.value })}
-                className="bg-secondary border-border text-foreground rounded-sm"
+                className="bg-secondary/50 border-border text-foreground rounded-sm h-10"
               />
             </div>
             <div>
-              <Label htmlFor="key" className="text-muted-foreground">
-                Key
-              </Label>
+              <Label htmlFor="key" className="text-xs font-bold uppercase text-muted-foreground mb-1.5 block">Key</Label>
               <Input
                 id="key"
                 value={editForm.key}
                 onChange={(e) => setEditForm({ ...editForm, key: e.target.value })}
-                className="bg-secondary border-border text-foreground rounded-sm"
+                className="bg-secondary/50 border-border text-foreground rounded-sm h-10"
               />
             </div>
             <div>
-              <Label htmlFor="tags" className="text-muted-foreground">
-                Tags (comma-separated)
-              </Label>
+              <Label htmlFor="tags" className="text-xs font-bold uppercase text-muted-foreground mb-1.5 block">Tags</Label>
               <Input
                 id="tags"
                 value={editForm.tags}
                 onChange={(e) => setEditForm({ ...editForm, tags: e.target.value })}
-                className="bg-secondary border-border text-foreground rounded-sm"
+                className="bg-secondary/50 border-border text-foreground rounded-sm h-10"
+                placeholder="Rock, Acoustic, Favorite"
               />
             </div>
             <div>
-              <Label htmlFor="content" className="text-muted-foreground">
-                Content
-              </Label>
+              <Label htmlFor="content" className="text-xs font-bold uppercase text-muted-foreground mb-1.5 block">Content</Label>
               <Textarea
                 id="content"
                 value={editForm.content}
                 onChange={(e) => setEditForm({ ...editForm, content: e.target.value })}
-                className="bg-secondary border-border text-foreground rounded-sm font-mono min-h-[300px]"
+                className="bg-secondary/50 border-border text-foreground rounded-sm font-mono min-h-[300px] text-sm leading-relaxed"
               />
             </div>
           </div>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setIsEditing(false)} className="rounded-sm">
-              Cancel
-            </Button>
-            <Button onClick={handleSaveEdit} className="rounded-sm">
-              Save Changes
-            </Button>
+          <DialogFooter className="gap-2 sm:gap-0">
+            <Button variant="outline" onClick={() => setIsEditing(false)} className="rounded-sm">Cancel</Button>
+            <Button onClick={handleSaveEdit} className="rounded-sm">Save Changes</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
