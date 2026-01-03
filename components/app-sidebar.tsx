@@ -90,7 +90,7 @@ export function AppSidebar({ currentView, onNavigate, ...props }: AppSidebarProp
               tabIndex={0}
             >
               <div className="bg-primary text-primary-foreground flex size-8 shrink-0 items-center justify-center rounded-md">
-                <User className="size-4" />
+                <User className="size-4 mx-auto" />
               </div>
               <div className="flex-1 min-w-0 group-data-[collapsible=icon]:hidden">
                 <p className="text-sm font-medium truncate">{mockUser.name}</p>
