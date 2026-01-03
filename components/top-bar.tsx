@@ -2,11 +2,9 @@
 
 import type React from "react"
 import { useState } from "react"
-import { Search, User, Bell, Upload, Palette, Music } from "lucide-react"
+import { Search, Bell, Upload } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
-import { useTheme } from "next-themes"
 import { SidebarTrigger } from "@/components/ui/sidebar"
 
 interface TopBarProps {
@@ -16,7 +14,6 @@ interface TopBarProps {
 
 export function TopBar({ onSearch, onNavigateHome }: TopBarProps) {
   const [searchQuery, setSearchQuery] = useState("")
-  const { setTheme } = useTheme()
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault()
@@ -52,36 +49,10 @@ export function TopBar({ onSearch, onNavigateHome }: TopBarProps) {
           Upload
         </Button>
 
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" size="icon" className="text-muted-foreground">
-              <Palette className="w-5 h-5" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuItem onClick={() => setTheme("light")}>Claro</DropdownMenuItem>
-            <DropdownMenuItem onClick={() => setTheme("dark")}>Escuro</DropdownMenuItem>
-            <DropdownMenuItem onClick={() => setTheme("system")}>Sistema</DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-
         <Button variant="ghost" size="icon" className="text-muted-foreground relative">
           <Bell className="w-5 h-5" />
           <span className="absolute top-2 right-2 w-2 h-2 bg-primary rounded-full border-2 border-background" />
         </Button>
-
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" size="icon" className="text-muted-foreground">
-              <User className="w-5 h-5" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuItem>Perfil</DropdownMenuItem>
-            <DropdownMenuItem>Configurações</DropdownMenuItem>
-            <DropdownMenuItem>Sair</DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
       </div>
     </header>
   )
