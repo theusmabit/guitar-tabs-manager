@@ -3,31 +3,37 @@
 import * as React from "react"
 import { Home, Music, Heart, Folder, Plus, Settings, LogOut, ChevronDown, HelpCircle } from "lucide-react"
 import { useTheme } from "next-themes"
-
-import {
-  Sidebar,
-  SidebarContent,
-  SidebarGroup,
-  SidebarGroupContent,
-  SidebarGroupLabel,
-  SidebarHeader,
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
-  SidebarRail,
-  SidebarFooter,
-  useSidebar,
-} from "@/components/ui/sidebar"
+import { Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarRail, SidebarFooter, useSidebar, } from "@/components/ui/sidebar"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuSeparator } from "@/components/ui/dropdown-menu"
 
 const navigationItems = [
-  { id: "home", title: "Início", icon: Home },
-  { id: "library", title: "Biblioteca", icon: Music },
-  { id: "favorites", title: "Favoritos", icon: Heart },
-  { id: "folders", title: "Pastas", icon: Folder },
-  { id: "add", title: "Adicionar Música", icon: Plus },
+  {
+    id: "home",
+    title: "Início",
+    icon: Home,
+  },
+  {
+    id: "library",
+    title: "Biblioteca",
+    icon: Music,
+  },
+  {
+    id: "favorites",
+    title: "Favoritos",
+    icon: Heart,
+  },
+  {
+    id: "folders",
+    title: "Pastas",
+    icon: Folder,
+  },
+  {
+    id: "add",
+    title: "Adicionar Música",
+    icon: Plus,
+  },
 ]
 
 interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
@@ -38,7 +44,6 @@ interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
 export function AppSidebar({ currentView, onNavigate, ...props }: AppSidebarProps) {
   const { state } = useSidebar()
   const isCollapsed = state === "collapsed"
-
   const mockUser = {
     name: "Usuário Mock",
     email: "user@example.com",
@@ -53,10 +58,8 @@ export function AppSidebar({ currentView, onNavigate, ...props }: AppSidebarProp
           <Music className="size-6" />
           <span className="group-data-[collapsible=icon]:hidden">ChordMaster</span>
         </div>
-        
         {/* O botão de colapso foi movido para o TopBar */}
       </SidebarHeader>
-      
       <SidebarContent className="justify-start">
         {/* Grupo 1: Navegação Principal */}
         <SidebarGroup>
@@ -80,14 +83,12 @@ export function AppSidebar({ currentView, onNavigate, ...props }: AppSidebarProp
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
-
       <SidebarFooter className="border-t border-sidebar-border p-2 group-data-[collapsible=icon]:p-0">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             {/* User Profile Row - Agora é o Trigger */}
-            <div
-              className="flex items-center gap-2 p-2 rounded-md hover:bg-sidebar-accent cursor-pointer transition-colors 
-              group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:p-3 group-data-[collapsible=icon]:h-12 group-data-[collapsible=icon]:w-full"
+            <div 
+              className="flex items-center gap-2 p-2 hover:bg-sidebar-accent cursor-pointer transition-colors group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:p-3 group-data-[collapsible=icon]:h-12 group-data-[collapsible=icon]:w-full"
               role="button"
               tabIndex={0}
             >
@@ -104,21 +105,17 @@ export function AppSidebar({ currentView, onNavigate, ...props }: AppSidebarProp
             </div>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" side="top" sideOffset={8} className="w-56">
-            
             {/* Item: Configurações */}
             <DropdownMenuItem onClick={() => onNavigate("settings")}>
               <Settings className="size-4 mr-2" />
               Configurações
             </DropdownMenuItem>
-
             {/* Item: Ajuda */}
             <DropdownMenuItem>
               <HelpCircle className="size-4 mr-2" />
               Ajuda
             </DropdownMenuItem>
-
             <DropdownMenuSeparator />
-
             {/* Item: Sair */}
             <DropdownMenuItem onClick={() => console.log("Logout")} className="text-destructive">
               <LogOut className="size-4 mr-2" />
