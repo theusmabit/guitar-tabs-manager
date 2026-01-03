@@ -32,10 +32,22 @@ This document outlines the core technologies used in this application and provid
     *   For local component state, use React's `useState` or `useReducer`.
     *   For global or shared state, consider using React Context API.
 *   **Routing**:
-    *   Utilize Next.js's App Router for navigation. Keep main routes defined in `src/App.tsx` (if applicable, in this Next.js app, routes are file-based).
+    *   Utilize Next.js's App Router for navigation.
 *   **Data Persistence**:
     *   For client-side data storage, use `localStorage` as demonstrated in `lib/storage.ts`.
 *   **Notifications**:
     *   Use `sonner` for all toast notifications to provide user feedback.
 *   **Theme Management**:
     *   Use `next-themes` for handling light/dark mode toggling.
+*   **Carousels**:
+    *   Use `embla-carousel-react` for carousel functionalities.
+*   **OTP Inputs**:
+    *   Use `input-otp` for one-time password input fields.
+*   **Calendars/Date Pickers**:
+    *   Use `react-day-picker` for calendar and date selection components.
+*   **Charts**:
+    *   Use `recharts` for all charting and data visualization needs.
+*   **Drawers**:
+    *   Use `vaul` for bottom/side sheet components.
+*   **Command Palettes**:
+    *   Use `cmdk` for command palette interfaces.
