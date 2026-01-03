@@ -98,49 +98,50 @@ export function MusicPlayer({ song, audioUrl }: MusicPlayerProps) {
           </div>
         </div>
 
-        {/* Controls Row */}
-        <div className="flex items-center justify-center gap-2">
-          <Button
-            variant="ghost"
-            size="icon"
-            className="h-8 w-8 text-muted-foreground"
-            onClick={() => skipTime(-5)}
-            disabled={!audioUrl}
-          >
-            <SkipBack className="w-4 h-4" />
-          </Button>
+        {/* Controls Row with Volume */}
+        <div className="flex items-center justify-between gap-2">
+          <div className="flex items-center gap-1">
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-8 w-8 text-muted-foreground"
+              onClick={() => skipTime(-5)}
+              disabled={!audioUrl}
+            >
+              <SkipBack className="w-4 h-4" />
+            </Button>
 
-          <Button
-            variant="outline"
-            size="icon"
-            className="h-10 w-10 rounded-full border-border"
-            onClick={togglePlay}
-            disabled={!audioUrl}
-          >
-            {isPlaying ? <Pause className="w-5 h-5" /> : <Play className="w-5 h-5 ml-0.5" />}
-          </Button>
+            <Button
+              variant="outline"
+              size="icon"
+              className="h-9 w-9 rounded-full border-border"
+              onClick={togglePlay}
+              disabled={!audioUrl}
+            >
+              {isPlaying ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4 ml-0.5" />}
+            </Button>
 
-          <Button
-            variant="ghost"
-            size="icon"
-            className="h-8 w-8 text-muted-foreground"
-            onClick={() => skipTime(5)}
-            disabled={!audioUrl}
-          >
-            <SkipForward className="w-4 h-4" />
-          </Button>
-        </div>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-8 w-8 text-muted-foreground"
+              onClick={() => skipTime(5)}
+              disabled={!audioUrl}
+            >
+              <SkipForward className="w-4 h-4" />
+            </Button>
+          </div>
 
-        {/* Volume Control */}
-        <div className="flex items-center gap-2">
-          <Volume2 className="w-3.5 h-3.5 text-muted-foreground shrink-0" />
-          <Slider
-            value={[volume]}
-            max={100}
-            step={1}
-            onValueChange={handleVolumeChange}
-            className="flex-1"
-          />
+          <div className="flex items-center gap-2 flex-1 max-w-[100px]">
+            <Volume2 className="w-3.5 h-3.5 text-muted-foreground shrink-0" />
+            <Slider
+              value={[volume]}
+              max={100}
+              step={1}
+              onValueChange={handleVolumeChange}
+              className="flex-1"
+            />
+          </div>
         </div>
 
         {!audioUrl && (
