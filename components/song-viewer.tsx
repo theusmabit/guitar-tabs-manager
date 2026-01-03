@@ -13,6 +13,7 @@ import {
   Columns2,
   Minus,
   Type,
+  Zap,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
@@ -314,8 +315,14 @@ export function SongViewer({ song, onUpdateSong, onBack }: SongViewerProps) {
                   </Card>
 
                   <Card className="rounded-sm border-border shadow-none">
+                    <CardHeader className="pb-3 pt-4">
+                      <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground flex items-center gap-2">
+                        <Zap className="w-3 h-3" />
+                        Practice Tools
+                      </h3>
+                    </CardHeader>
                     <Tabs defaultValue="tuner" className="w-full">
-                      <TabsList className="w-full grid grid-cols-2 rounded-sm h-9">
+                      <TabsList className="w-full grid grid-cols-2 rounded-sm h-9 px-4 bg-transparent">
                         <TabsTrigger value="tuner" className="rounded-sm text-xs">
                           Tuner
                         </TabsTrigger>
