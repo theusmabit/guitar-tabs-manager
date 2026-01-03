@@ -67,7 +67,7 @@ export function MusicPlayer({ song, audioUrl }: MusicPlayerProps) {
   }
 
   return (
-    <Card className="rounded-sm border-border shadow-none bg-accent/20">
+    <Card className="rounded-sm border-border shadow-none bg-card">
       <audio ref={audioRef} src={audioUrl || `/placeholder-audio.mp3`} />
       <CardContent className="p-4 space-y-3">
         {/* Progress and Time */}
