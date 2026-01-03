@@ -1,7 +1,7 @@
 "use client"
 
 import * as React from "react"
-import { Home, Music, Heart, Folder, Plus, Settings, Palette, LogOut, User, ChevronDown, HelpCircle } from "lucide-react"
+import { Home, Music, Heart, Folder, Plus, Settings, LogOut, ChevronDown, HelpCircle } from "lucide-react"
 import { useTheme } from "next-themes"
 
 import {
@@ -20,7 +20,7 @@ import {
 } from "@/components/ui/sidebar"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuSeparator, DropdownMenuSub, DropdownMenuSubTrigger, DropdownMenuSubContent } from "@/components/ui/dropdown-menu"
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuSeparator } from "@/components/ui/dropdown-menu"
 import { SidebarCollapseButton } from "./sidebar-collapse-button"
 
 const navigationItems = [
@@ -37,7 +37,6 @@ interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
 }
 
 export function AppSidebar({ currentView, onNavigate, ...props }: AppSidebarProps) {
-  const { setTheme } = useTheme()
   const { state } = useSidebar()
   const isCollapsed = state === "collapsed"
 
@@ -49,15 +48,15 @@ export function AppSidebar({ currentView, onNavigate, ...props }: AppSidebarProp
 
   return (
     <Sidebar collapsible="icon" {...props}>
-      <SidebarHeader className="border-b border-sidebar-border h-16 flex items-center px-4 group-data-[collapsible=icon]:px-2">
+      <SidebarHeader className="border-b border-sidebar-border h-16 flex items-center justify-between px-4 group-data-[collapsible=icon]:px-2">
         {/* Logo ChordMaster */}
-        <div className="flex items-center gap-2 font-bold text-primary group-data-[collapsible=icon]:hidden">
+        <div className="flex items-center gap-2 font-bold text-primary">
           <Music className="size-6" />
-          <span>ChordMaster</span>
+          <span className="group-data-[collapsible=icon]:hidden">ChordMaster</span>
         </div>
         
-        {/* Botão de Colapso/Expansão */}
-        <div className="ml-auto group-data-[collapsible=icon]:ml-0 group-data-[collapsible=icon]:w-full">
+        {/* Botão de Colapso/Expansão - Sempre visível no desktop */}
+        <div className="group-data-[collapsible=icon]:w-full group-data-[collapsible=icon]:flex group-data-[collapsible=icon]:justify-center">
           <SidebarCollapseButton />
         </div>
       </SidebarHeader>
