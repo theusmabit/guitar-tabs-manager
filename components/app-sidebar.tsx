@@ -1,7 +1,7 @@
 "use client"
 
 import * as React from "react"
-import { Home, Music, Heart, Folder, Plus, Settings, Palette, LogOut, User, ChevronDown, HelpCircle } from "lucide-react"
+import { Home, Music, Heart, Folder, Plus, Settings, Palette, LogOut, User, MoreVertical, ChevronDown, HelpCircle } from "lucide-react"
 import { useTheme } from "next-themes"
 
 import {
@@ -9,13 +9,13 @@ import {
   SidebarContent,
   SidebarGroup,
   SidebarGroupContent,
+  SidebarGroupLabel,
   SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarRail,
   SidebarFooter,
-  SidebarSeparator,
   useSidebar,
 } from "@/components/ui/sidebar"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
@@ -60,8 +60,9 @@ export function AppSidebar({ currentView, onNavigate, ...props }: AppSidebarProp
       </SidebarHeader>
       
       <SidebarContent className="justify-between">
-        {/* Grupo 1: Navegação Principal (Topo) - Sem rótulo */}
+        {/* Grupo 1: Navegação Principal (Topo) */}
         <SidebarGroup>
+          <SidebarGroupLabel>Navegação</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {navigationItems.map((item) => (
@@ -82,10 +83,9 @@ export function AppSidebar({ currentView, onNavigate, ...props }: AppSidebarProp
 
         {/* Container para os grupos inferiores */}
         <div className="mt-auto flex flex-col gap-2">
-          <SidebarSeparator />
-
-          {/* Grupo 2: Ferramentas e Utilidades (Base) - Sem rótulo */}
+          {/* Grupo 2: Ferramentas e Utilidades (Base) */}
           <SidebarGroup>
+            <SidebarGroupLabel>Ferramentas</SidebarGroupLabel>
             <SidebarGroupContent>
               <SidebarMenu>
                 <SidebarMenuItem>
@@ -114,8 +114,9 @@ export function AppSidebar({ currentView, onNavigate, ...props }: AppSidebarProp
             </SidebarGroupContent>
           </SidebarGroup>
 
-          {/* Grupo 3: Configurações (Base) - Sem rótulo */}
+          {/* Grupo 3: Configurações (Base) */}
           <SidebarGroup>
+            <SidebarGroupLabel>Configurações</SidebarGroupLabel>
             <SidebarGroupContent>
               <SidebarMenu>
                 <SidebarMenuItem>
