@@ -21,7 +21,7 @@ import {
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuSeparator } from "@/components/ui/dropdown-menu"
-import { SidebarCollapseButton } from "./sidebar-collapse-button"
+// Removendo a importação de SidebarCollapseButton
 
 const navigationItems = [
   { id: "home", title: "Início", icon: Home },
@@ -48,17 +48,14 @@ export function AppSidebar({ currentView, onNavigate, ...props }: AppSidebarProp
 
   return (
     <Sidebar collapsible="icon" {...props}>
-      <SidebarHeader className="border-b border-sidebar-border h-16 flex items-center justify-between px-4 group-data-[collapsible=icon]:px-2">
+      <SidebarHeader className="border-b border-sidebar-border h-16 flex items-center px-4 group-data-[collapsible=icon]:px-2">
         {/* Logo ChordMaster */}
         <div className="flex items-center gap-2 font-bold text-primary">
           <Music className="size-6" />
           <span className="group-data-[collapsible=icon]:hidden">ChordMaster</span>
         </div>
         
-        {/* Botão de Colapso/Expansão - Sempre visível no desktop */}
-        <div className="group-data-[collapsible=icon]:w-full group-data-[collapsible=icon]:flex group-data-[collapsible=icon]:justify-center">
-          <SidebarCollapseButton />
-        </div>
+        {/* O botão de colapso foi movido para o TopBar */}
       </SidebarHeader>
       
       <SidebarContent className="justify-start">
