@@ -1,11 +1,18 @@
 "use client"
 
 import { useState, useMemo } from "react"
-import { Search, Heart, Trash2, Plus, FolderPlus, X } from "lucide-react"
+import { Search, Heart, Trash2, Plus, FolderPlus, X, Filter } from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
+import { 
+  Select, 
+  SelectContent, 
+  SelectItem, 
+  SelectTrigger, 
+  SelectValue 
+} from "@/components/ui/select"
 import type { Song, Folder } from "@/lib/types"
 import { cn } from "@/lib/utils"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from "@/components/ui/dialog"
@@ -45,14 +52,55 @@ export function Library({
   const [searchQuery, setSearchQuery] = useState("")
   const [newFolderName, setNewFolderName] = useState("")
   const [isCreatingFolder, setIsCreatingFolder] = useState(false)
+  const [filters, setFilters] = useState({
+    genre: "",
+    artist: "",
+    key: "",
+  })
+
+  // Extrair opções únicas para os filtros
+  const uniqueGenres = useMemo(() => {
+    const genres = new Set<string>()
+    songs.forEach(song => {
+      song.tags.forEach(tag => genres.add(tag))
+    })
+    return Array.from(genres).sort()
+  }, [songs])
+
+  const uniqueArtists = useMemo(() => {
+    const artists = new Set<string>()
+    songs.forEach(song => artists.add(song.artist))
+    return Array.from(artists).sort()
+  }, [songs])
+
+  const uniqueKeys = useMemo(() => {
+    const keys = new Set<string>()
+    songs.forEach(song => keys.add(song.key))
+    return Array.from(keys).sort()
+  }, [songs])
 
   const filteredSongs = useMemo(() => {
-    return songs.filter(
-      (song) =>
-        song.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        song.artist.toLowerCase().includes(searchQuery.toLowerCase()),
-    )
-  }, [songs, searchQuery])
+    return songs.filter((song) => {
+      const matchesSearch = 
+        searchQuery === "" || 
+        song.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
+        song.artist.toLowerCase().includes(searchQuery.toLowerCase())
+      
+      const matchesGenre = 
+        filters.genre === "" || 
+        song.tags.includes(filters.genre)
+      
+      const matchesArtist = 
+        filters.artist === "" || 
+        song.artist === filters.artist
+      
+      const matchesKey = 
+        filters.key === "" || 
+        song.key === filters.key
+      
+      return matchesSearch && matchesGenre && matchesArtist && matchesKey
+    })
+  }, [songs, searchQuery, filters])
 
   const handleCreateFolder = () => {
     if (newFolderName.trim() && onAddFolder) {
@@ -62,11 +110,20 @@ export function Library({
     }
   }
 
+  const clearFilters = () => {
+    setFilters({
+      genre: "",
+      artist: "",
+      key: "",
+    })
+    setSearchQuery("")
+  }
+
   return (
     <div className="p-6 pt-20 md:pt-20">
       <div className="mb-6">
         <h2 className="text-3xl font-bold text-foreground mb-4">{title}</h2>
-
+        
         {showFolderManager && (
           <div className="mb-6">
             <div className="flex items-center gap-2 mb-4">
@@ -74,8 +131,7 @@ export function Library({
               <Dialog open={isCreatingFolder} onOpenChange={setIsCreatingFolder}>
                 <DialogTrigger asChild>
                   <Button size="sm" className="bg-primary hover:bg-primary/90 text-primary-foreground">
-                    <Plus className="w-4 h-4 mr-2" />
-                    New Folder
+                    <Plus className="w-4 h-4 mr-2" /> New Folder
                   </Button>
                 </DialogTrigger>
                 <DialogContent className="bg-card border-border">
@@ -100,14 +156,13 @@ export function Library({
                 </DialogContent>
               </Dialog>
             </div>
-
             <div className="flex flex-wrap gap-2 mb-6">
               <Button
                 variant="outline"
                 size="sm"
                 className={cn(
                   "border-border text-muted-foreground hover:bg-accent hover:text-foreground",
-                  !selectedFolder && "bg-primary/10 text-primary border-primary/50 hover:text-primary",
+                  !selectedFolder && "bg-primary/10 text-primary border-primary/50 hover:text-primary"
                 )}
                 onClick={() => onSelectFolder?.(null)}
               >
@@ -120,7 +175,7 @@ export function Library({
                     size="sm"
                     className={cn(
                       "border-border text-muted-foreground hover:bg-accent hover:text-foreground",
-                      selectedFolder === folder.id && "bg-primary/10 text-primary border-primary/50 hover:text-primary",
+                      selectedFolder === folder.id && "bg-primary/10 text-primary border-primary/50 hover:text-primary"
                     )}
                     onClick={() => onSelectFolder?.(folder.id)}
                   >
@@ -139,15 +194,74 @@ export function Library({
             </div>
           </div>
         )}
-
-        <div className="relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
-          <Input
-            placeholder="Search by title or artist..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-10 bg-secondary border-border text-foreground placeholder:text-muted-foreground"
-          />
+        
+        <div className="flex flex-col md:flex-row gap-4 mb-6">
+          <div className="relative flex-1">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+            <Input
+              placeholder="Search by title or artist..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="pl-10 bg-secondary border-border text-foreground placeholder:text-muted-foreground"
+            />
+          </div>
+          
+          <Button 
+            variant="outline" 
+            size="sm"
+            onClick={clearFilters}
+            className="border-border text-muted-foreground hover:bg-accent"
+          >
+            <Filter className="w-4 h-4 mr-2" />
+            Clear Filters
+          </Button>
+        </div>
+        
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+          <div>
+            <label className="text-sm font-medium text-muted-foreground mb-1 block">Genre</label>
+            <Select value={filters.genre} onValueChange={(value) => setFilters({...filters, genre: value})}>
+              <SelectTrigger className="bg-secondary border-border text-foreground">
+                <SelectValue placeholder="All genres" />
+              </SelectTrigger>
+              <SelectContent className="bg-card border-border">
+                <SelectItem value="">All genres</SelectItem>
+                {uniqueGenres.map((genre) => (
+                  <SelectItem key={genre} value={genre}>{genre}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+          
+          <div>
+            <label className="text-sm font-medium text-muted-foreground mb-1 block">Artist</label>
+            <Select value={filters.artist} onValueChange={(value) => setFilters({...filters, artist: value})}>
+              <SelectTrigger className="bg-secondary border-border text-foreground">
+                <SelectValue placeholder="All artists" />
+              </SelectTrigger>
+              <SelectContent className="bg-card border-border">
+                <SelectItem value="">All artists</SelectItem>
+                {uniqueArtists.map((artist) => (
+                  <SelectItem key={artist} value={artist}>{artist}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+          
+          <div>
+            <label className="text-sm font-medium text-muted-foreground mb-1 block">Key</label>
+            <Select value={filters.key} onValueChange={(value) => setFilters({...filters, key: value})}>
+              <SelectTrigger className="bg-secondary border-border text-foreground">
+                <SelectValue placeholder="All keys" />
+              </SelectTrigger>
+              <SelectContent className="bg-card border-border">
+                <SelectItem value="">All keys</SelectItem>
+                {uniqueKeys.map((key) => (
+                  <SelectItem key={key} value={key}>{key}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
         </div>
       </div>
 
@@ -155,7 +269,7 @@ export function Library({
         <div className="text-center py-12 text-muted-foreground">
           <Music className="w-16 h-16 mx-auto mb-4 opacity-50" />
           <p className="text-lg">No songs found</p>
-          <p className="text-sm">Try adjusting your search or add some songs</p>
+          <p className="text-sm">Try adjusting your search or filters</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -176,9 +290,7 @@ export function Library({
                       size="icon"
                       className={cn(
                         "h-8 w-8",
-                        song.isFavorite
-                          ? "text-primary hover:text-primary/80"
-                          : "text-muted-foreground hover:text-primary",
+                        song.isFavorite ? "text-primary hover:text-primary/80" : "text-muted-foreground hover:text-primary"
                       )}
                       onClick={(e) => {
                         e.stopPropagation()
@@ -273,12 +385,7 @@ export function Library({
 function Music({ className }: { className?: string }) {
   return (
     <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth={2}
-        d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"
-      />
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3" />
     </svg>
   )
 }
