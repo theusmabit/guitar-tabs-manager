@@ -1,7 +1,7 @@
 "use client"
 
 import * as React from "react"
-import { Home, Music, Heart, Folder, Plus, Settings, Palette, LogOut, User, MoreVertical, ChevronDown, HelpCircle } from "lucide-react"
+import { Home, Music, Heart, Folder, Plus, Settings, Palette, LogOut, MoreVertical, ChevronDown, HelpCircle } from "lucide-react"
 import { useTheme } from "next-themes"
 
 import {
@@ -47,8 +47,8 @@ export function AppSidebar({ currentView, onNavigate, ...props }: AppSidebarProp
   }
 
   return (
-    <Sidebar collapsible="icon" {...props}>
-      <SidebarHeader className="border-b border-sidebar-border h-16 flex items-center px-4">
+    <Sidebar collapsible="icon" variant="inset" {...props}>
+      <SidebarHeader className="border-b border-sidebar-border h-16 flex items-center px-4 group-data-[variant=inset]:px-2">
         <div className="flex items-center gap-2 font-bold text-primary">
           <Music className="size-6" />
           <span className="group-data-[collapsible=icon]:hidden">ChordMaster</span>
@@ -134,9 +134,9 @@ export function AppSidebar({ currentView, onNavigate, ...props }: AppSidebarProp
         </SidebarGroup>
       </SidebarContent>
 
-      <SidebarFooter className="border-t border-sidebar-border p-2">
-        {/* User Profile Row - Simplified */}
-        <div className="flex items-center gap-2 p-2 rounded-md hover:bg-sidebar-accent">
+      <SidebarFooter className="border-t border-sidebar-border p-2 group-data-[variant=inset]:p-0">
+        {/* User Profile Row - Integrated style */}
+        <div className="flex items-center gap-2 p-2 rounded-md hover:bg-sidebar-accent group-data-[variant=inset]:p-2">
           <Avatar className="size-8 shrink-0">
             <AvatarFallback className="bg-primary text-primary-foreground text-xs">
               {mockUser.initials}
@@ -154,7 +154,7 @@ export function AppSidebar({ currentView, onNavigate, ...props }: AppSidebarProp
                 className="text-muted-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground shrink-0 group-data-[collapsible=icon]:size-8 group-data-[collapsible=icon]:p-0"
                 tooltip="Opções de Usuário"
               >
-                <ChevronDown className="size-4" />
+                <MoreVertical className="size-4" />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" side="top" sideOffset={8}>
