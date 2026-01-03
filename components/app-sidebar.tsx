@@ -21,7 +21,6 @@ import {
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuSeparator } from "@/components/ui/dropdown-menu"
-// Removendo a importação de SidebarCollapseButton
 
 const navigationItems = [
   { id: "home", title: "Início", icon: Home },
@@ -63,13 +62,14 @@ export function AppSidebar({ currentView, onNavigate, ...props }: AppSidebarProp
         <SidebarGroup>
           <SidebarGroupLabel>Navegação</SidebarGroupLabel>
           <SidebarGroupContent>
-            <SidebarMenu>
+            <SidebarMenu className="flex w-full min-w-0 flex-col gap-2">
               {navigationItems.map((item) => (
                 <SidebarMenuItem key={item.id}>
                   <SidebarMenuButton
                     onClick={() => onNavigate(item.id)}
                     isActive={currentView === item.id}
                     tooltip={item.title}
+                    size="lg"
                   >
                     <item.icon />
                     <span>{item.title}</span>
@@ -81,12 +81,13 @@ export function AppSidebar({ currentView, onNavigate, ...props }: AppSidebarProp
         </SidebarGroup>
       </SidebarContent>
 
-      <SidebarFooter className="border-t border-sidebar-border p-2">
+      <SidebarFooter className="border-t border-sidebar-border p-2 group-data-[collapsible=icon]:p-0">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             {/* User Profile Row - Agora é o Trigger */}
             <div
-              className="flex items-center gap-2 p-2 rounded-md hover:bg-sidebar-accent cursor-pointer"
+              className="flex items-center gap-2 p-2 rounded-md hover:bg-sidebar-accent cursor-pointer transition-colors 
+              group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:p-3 group-data-[collapsible=icon]:h-12 group-data-[collapsible=icon]:w-full"
               role="button"
               tabIndex={0}
             >
@@ -99,7 +100,7 @@ export function AppSidebar({ currentView, onNavigate, ...props }: AppSidebarProp
                 <p className="text-sm font-medium truncate">{mockUser.name}</p>
                 <p className="text-xs text-muted-foreground truncate">{mockUser.email}</p>
               </div>
-              <ChevronDown className="size-4 text-muted-foreground shrink-0 group-data-[collapsible=icon]:size-8 group-data-[collapsible=icon]:p-2" />
+              <ChevronDown className="size-4 text-muted-foreground shrink-0 group-data-[collapsible=icon]:hidden" />
             </div>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" side="top" sideOffset={8} className="w-56">
