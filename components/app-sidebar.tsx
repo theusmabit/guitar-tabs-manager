@@ -21,10 +21,11 @@ import {
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
+import { SidebarCollapseButton } from "./sidebar-collapse-button"
 
 const navigationItems = [
   { id: "home", title: "Início", icon: Home },
-  { id: "library", title: "Biblioteca", "icon": Music },
+  { id: "library", title: "Biblioteca", icon: Music },
   { id: "favorites", title: "Favoritos", icon: Heart },
   { id: "folders", title: "Pastas", icon: Folder },
   { id: "add", title: "Adicionar Música", icon: Plus },
@@ -54,13 +55,11 @@ export function AppSidebar({ currentView, onNavigate, ...props }: AppSidebarProp
           <span className="group-data-[collapsible=icon]:hidden">ChordMaster</span>
         </div>
         <div className="ml-auto group-data-[collapsible=icon]:hidden">
-          <Button variant="ghost" size="icon-sm" className="text-muted-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground">
-            <ChevronDown className="size-4" />
-          </Button>
+          <SidebarCollapseButton />
         </div>
       </SidebarHeader>
       
-      <SidebarContent className="justify-between"> {/* Adicionado justify-between para empurrar o último grupo para baixo */}
+      <SidebarContent className="justify-between">
         {/* Grupo 1: Navegação Principal (Topo) */}
         <SidebarGroup>
           <SidebarGroupLabel>Navegação</SidebarGroupLabel>
