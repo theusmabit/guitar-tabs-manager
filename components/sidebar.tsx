@@ -67,9 +67,9 @@ export function Sidebar({ currentView, onNavigate }: SidebarProps) {
         })}
       </nav>
 
-      <div className="p-4 border-t border-border mt-auto space-y-2">
-        {/* Theme and Language on the bottom menu */}
-        <div className={cn("flex items-center gap-1", isCollapsed ? "flex-col" : "justify-between")}>
+      <div className="p-4 border-t border-border mt-auto space-y-4">
+        {/* Theme and Language Selection */}
+        <div className={cn("flex gap-2", isCollapsed ? "flex-col items-center" : "items-center")}>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button
@@ -105,7 +105,10 @@ export function Sidebar({ currentView, onNavigate }: SidebarProps) {
               <DropdownMenuItem className="text-foreground hover:bg-accent cursor-pointer">Español</DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
+        </div>
 
+        {/* Collapse Button */}
+        <div className={cn("flex", isCollapsed ? "justify-center" : "justify-start")}>
           <Button
             variant="ghost"
             size="icon"
