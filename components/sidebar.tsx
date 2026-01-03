@@ -1,9 +1,10 @@
 "use client"
 
-import { Home, Music, Heart, Folder, Plus, Settings, ChevronLeft, ChevronRight } from "lucide-react"
+import { Home, Music, Heart, Folder, Plus, Settings, ChevronLeft, ChevronRight, Palette, Languages } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 import { useState } from "react"
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 
 interface SidebarProps {
   currentView: string
@@ -12,8 +13,6 @@ interface SidebarProps {
 
 export function Sidebar({ currentView, onNavigate }: SidebarProps) {
   const [isCollapsed, setIsCollapsed] = useState(false)
-
-  console.log("[v0] Sidebar collapsed state:", isCollapsed)
 
   const menuItems = [
     { id: "home", label: "Home", icon: Home },
@@ -68,25 +67,55 @@ export function Sidebar({ currentView, onNavigate }: SidebarProps) {
         })}
       </nav>
 
-      <div className="p-4 border-t border-border mt-auto">
-        <Button
-          variant="ghost"
-          className="w-full justify-center hover:bg-accent hover:text-primary"
-          onClick={() => {
-            console.log("[v0] Toggle button clicked, new state:", !isCollapsed)
-            setIsCollapsed(!isCollapsed)
-          }}
-          title={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
-        >
-          {isCollapsed ? (
-            <ChevronRight className="w-5 h-5" />
-          ) : (
-            <>
-              <ChevronLeft className="w-5 h-5 mr-2" />
-              <span className="text-sm">Collapse</span>
-            </>
-          )}
-        </Button>
+      <div className="p-4 border-t border-border mt-auto space-y-2">
+        {/* Theme and Language on the bottom menu */}
+        <div className={cn("flex items-center gap-1", isCollapsed ? "flex-col" : "justify-between")}>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="text-muted-foreground hover:text-foreground hover:bg-accent h-9 w-9"
+                title="Appearance"
+              >
+                <Palette className="w-4 h-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent side="right" align="end" className="bg-card border-border">
+              <DropdownMenuItem className="text-foreground hover:bg-accent cursor-pointer">Light</DropdownMenuItem>
+              <DropdownMenuItem className="text-foreground hover:bg-accent cursor-pointer">Dark</DropdownMenuItem>
+              <DropdownMenuItem className="text-foreground hover:bg-accent cursor-pointer">System</DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="text-muted-foreground hover:text-foreground hover:bg-accent h-9 w-9"
+                title="Language"
+              >
+                <Languages className="w-4 h-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent side="right" align="end" className="bg-card border-border">
+              <DropdownMenuItem className="text-foreground hover:bg-accent cursor-pointer">English</DropdownMenuItem>
+              <DropdownMenuItem className="text-foreground hover:bg-accent cursor-pointer">Português</DropdownMenuItem>
+              <DropdownMenuItem className="text-foreground hover:bg-accent cursor-pointer">Español</DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+
+          <Button
+            variant="ghost"
+            size="icon"
+            className="text-muted-foreground hover:text-primary h-9 w-9"
+            onClick={() => setIsCollapsed(!isCollapsed)}
+            title={isCollapsed ? "Expand" : "Collapse"}
+          >
+            {isCollapsed ? <ChevronRight className="w-4 h-4" /> : <ChevronLeft className="w-4 h-4" />}
+          </Button>
+        </div>
       </div>
     </aside>
   )
