@@ -50,13 +50,12 @@ export function AppSidebar({ currentView, onNavigate, ...props }: AppSidebarProp
 
   return (
     <Sidebar collapsible="icon" {...props}>
-      <SidebarHeader className="border-b border-sidebar-border h-16 flex items-center px-4 group-data-[collapsible=icon]:px-2">
+      <SidebarHeader className="border-b border-sidebar-border h-16 flex items-center justify-center px-4 group-data-[collapsible=icon]:px-2">
         {/* Logo ChordMaster */}
         <div className="flex items-center gap-2 font-bold text-primary">
           <Music className="size-6" />
           <span className="group-data-[collapsible=icon]:hidden">ChordMaster</span>
         </div>
-        {/* O botão de colapso foi movido para o TopBar */}
       </SidebarHeader>
       <SidebarContent className="justify-start">
         {/* Grupo 1: Navegação Principal */}

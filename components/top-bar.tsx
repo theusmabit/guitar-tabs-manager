@@ -2,11 +2,11 @@
 
 import type React from "react"
 import { useState } from "react"
-import { Search, Bell, Upload } from "lucide-react"
+import { Search, Bell } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { ThemeToggle } from "./theme-toggle"
-import { SidebarCollapseButton } from "./sidebar-collapse-button" // Importando o botão
+import { SidebarCollapseButton } from "./sidebar-collapse-button"
 
 interface TopBarProps {
   onSearch?: (query: string) => void
@@ -15,7 +15,7 @@ interface TopBarProps {
 
 export function TopBar({ onSearch, onNavigateHome }: TopBarProps) {
   const [searchQuery, setSearchQuery] = useState("")
-
+  
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault()
     if (onSearch) {
@@ -30,7 +30,7 @@ export function TopBar({ onSearch, onNavigateHome }: TopBarProps) {
         <div className="hidden md:block">
           <SidebarCollapseButton />
         </div>
-
+        
         {/* Center: Search Bar */}
         <form onSubmit={handleSearch} className="flex-1 max-w-md mx-4 hidden md:block">
           <div className="relative">
@@ -45,13 +45,8 @@ export function TopBar({ onSearch, onNavigateHome }: TopBarProps) {
           </div>
         </form>
       </div>
-
+      
       <div className="flex items-center gap-2">
-        <Button className="hidden sm:flex" size="sm">
-          <Upload className="w-4 h-4 mr-2" />
-          Upload
-        </Button>
-
         <Button variant="ghost" size="icon" className="text-muted-foreground relative">
           <Bell className="w-5 h-5" />
           <span className="absolute top-2 right-2 w-2 h-2 bg-primary rounded-full border-2 border-background" />
