@@ -5,7 +5,6 @@ import { useState } from "react"
 import { Search, Bell, Upload } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { SidebarTrigger } from "@/components/ui/sidebar"
 
 interface TopBarProps {
   onSearch?: (query: string) => void
@@ -25,9 +24,6 @@ export function TopBar({ onSearch, onNavigateHome }: TopBarProps) {
   return (
     <header className="sticky top-0 z-40 flex h-16 shrink-0 items-center gap-2 border-b bg-background px-4">
       <div className="flex items-center gap-2 flex-1">
-        <SidebarTrigger className="-ml-1" />
-        <div className="h-4 w-px bg-border mx-2 hidden md:block" />
-        
         {/* Center: Search Bar */}
         <form onSubmit={handleSearch} className="flex-1 max-w-md mx-4 hidden md:block">
           <div className="relative">

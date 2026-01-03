@@ -21,6 +21,7 @@ import {
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
+import { SidebarToggle } from "./sidebar-toggle"
 
 const navigationItems = [
   { id: "home", title: "Início", icon: Home },
@@ -28,10 +29,6 @@ const navigationItems = [
   { id: "favorites", title: "Favoritos", icon: Heart },
   { id: "folders", title: "Pastas", icon: Folder },
   { id: "add", title: "Adicionar Música", icon: Plus },
-]
-
-const utilityItems = [
-  { id: "settings", title: "Configurações", icon: Settings },
 ]
 
 interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
@@ -78,44 +75,44 @@ export function AppSidebar({ currentView, onNavigate, ...props }: AppSidebarProp
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
-
-        <SidebarGroup>
-          <SidebarGroupLabel>Ferramentas</SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              {utilityItems.map((item) => (
-                <SidebarMenuItem key={item.id}>
-                  <SidebarMenuButton
-                    onClick={() => onNavigate(item.id)}
-                    isActive={currentView === item.id}
-                    tooltip={item.title}
-                  >
-                    <item.icon />
-                    <span>{item.title}</span>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
-              <SidebarMenuItem>
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <SidebarMenuButton tooltip="Tema">
-                      <Palette />
-                      <span>Tema</span>
-                    </SidebarMenuButton>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="start" side="right" sideOffset={isCollapsed ? 12 : 0}>
-                    <DropdownMenuItem onClick={() => setTheme("light")}>Claro</DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => setTheme("dark")}>Escuro</DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => setTheme("system")}>Sistema</DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              </SidebarMenuItem>
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
       </SidebarContent>
 
-      <SidebarFooter className="border-t border-sidebar-border p-2">
+      <SidebarFooter className="border-t border-sidebar-border p-2 space-y-2">
+        {/* Utility Row (Settings, Theme, Toggle) */}
+        <div className="flex items-center justify-between">
+          <SidebarMenu className="flex-row flex-1">
+            <SidebarMenuItem>
+              <SidebarMenuButton
+                onClick={() => onNavigate("settings")}
+                isActive={currentView === "settings"}
+                tooltip="Configurações"
+              >
+                <Settings />
+                <span>Configurações</span>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+            <SidebarMenuItem>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <SidebarMenuButton tooltip="Tema">
+                    <Palette />
+                    <span>Tema</span>
+                  </SidebarMenuButton>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="start" side="right" sideOffset={isCollapsed ? 12 : 0}>
+                  <DropdownMenuItem onClick={() => setTheme("light")}>Claro</DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => setTheme("dark")}>Escuro</DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => setTheme("system")}>Sistema</DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </SidebarMenuItem>
+          </SidebarMenu>
+          <div className="group-data-[collapsible=icon]:hidden">
+            <SidebarToggle />
+          </div>
+        </div>
+
+        {/* User Profile Row */}
         <div className="flex items-center gap-2">
           <Avatar className="size-8 shrink-0">
             <AvatarFallback className="bg-primary text-primary-foreground text-xs">
