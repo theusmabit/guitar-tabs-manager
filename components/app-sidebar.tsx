@@ -1,7 +1,7 @@
 "use client"
 
 import * as React from "react"
-import { Home, Music, Heart, Folder, Plus, Settings, Palette, LogOut, User, MoreVertical, ChevronDown, HelpCircle } from "lucide-react"
+import { Home, Music, Heart, Folder, Plus, Settings, Palette, LogOut, User, ChevronDown, HelpCircle } from "lucide-react"
 import { useTheme } from "next-themes"
 
 import {
@@ -20,7 +20,7 @@ import {
 } from "@/components/ui/sidebar"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuSeparator, DropdownMenuSub, DropdownMenuSubTrigger, DropdownMenuSubContent } from "@/components/ui/dropdown-menu"
 import { SidebarCollapseButton } from "./sidebar-collapse-button"
 
 const navigationItems = [
@@ -59,8 +59,8 @@ export function AppSidebar({ currentView, onNavigate, ...props }: AppSidebarProp
         </div>
       </SidebarHeader>
       
-      <SidebarContent className="justify-between">
-        {/* Grupo 1: Navegação Principal (Topo) */}
+      <SidebarContent className="justify-start">
+        {/* Grupo 1: Navegação Principal */}
         <SidebarGroup>
           <SidebarGroupLabel>Navegação</SidebarGroupLabel>
           <SidebarGroupContent>
@@ -80,60 +80,6 @@ export function AppSidebar({ currentView, onNavigate, ...props }: AppSidebarProp
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
-
-        {/* Container para os grupos inferiores */}
-        <div className="mt-auto flex flex-col gap-2">
-          {/* Grupo 2: Ferramentas e Utilidades (Base) */}
-          <SidebarGroup>
-            <SidebarGroupLabel>Ferramentas</SidebarGroupLabel>
-            <SidebarGroupContent>
-              <SidebarMenu>
-                <SidebarMenuItem>
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <SidebarMenuButton tooltip="Tema">
-                        <Palette />
-                        <span>Tema</span>
-                        <ChevronDown className="size-4 ml-auto group-data-[collapsible=icon]:hidden" />
-                      </SidebarMenuButton>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="start" side="right" sideOffset={isCollapsed ? 12 : 0}>
-                      <DropdownMenuItem onClick={() => setTheme("light")}>Claro</DropdownMenuItem>
-                      <DropdownMenuItem onClick={() => setTheme("dark")}>Escuro</DropdownMenuItem>
-                      <DropdownMenuItem onClick={() => setTheme("system")}>Sistema</DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                </SidebarMenuItem>
-                <SidebarMenuItem>
-                  <SidebarMenuButton tooltip="Ajuda">
-                    <HelpCircle />
-                    <span>Ajuda</span>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              </SidebarMenu>
-            </SidebarGroupContent>
-          </SidebarGroup>
-
-          {/* Grupo 3: Configurações (Base) */}
-          <SidebarGroup>
-            <SidebarGroupLabel>Configurações</SidebarGroupLabel>
-            <SidebarGroupContent>
-              <SidebarMenu>
-                <SidebarMenuItem>
-                  <SidebarMenuButton
-                    onClick={() => onNavigate("settings")}
-                    isActive={currentView === "settings"}
-                    tooltip="Configurações"
-                  >
-                    <Settings />
-                    <span>Configurações</span>
-                    <ChevronDown className="size-4 ml-auto group-data-[collapsible=icon]:hidden" />
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              </SidebarMenu>
-            </SidebarGroupContent>
-          </SidebarGroup>
-        </div>
       </SidebarContent>
 
       <SidebarFooter className="border-t border-sidebar-border p-2">
@@ -159,7 +105,36 @@ export function AppSidebar({ currentView, onNavigate, ...props }: AppSidebarProp
                 <ChevronDown className="size-4" />
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" side="top" sideOffset={8}>
+            <DropdownMenuContent align="end" side="top" sideOffset={8} className="w-56">
+              
+              {/* Item: Configurações */}
+              <DropdownMenuItem onClick={() => onNavigate("settings")}>
+                <Settings className="size-4 mr-2" />
+                Configurações
+              </DropdownMenuItem>
+
+              {/* Submenu: Tema */}
+              <DropdownMenuSub>
+                <DropdownMenuSubTrigger>
+                  <Palette className="size-4 mr-2" />
+                  Tema
+                </DropdownMenuSubTrigger>
+                <DropdownMenuSubContent>
+                  <DropdownMenuItem onClick={() => setTheme("light")}>Claro</DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => setTheme("dark")}>Escuro</DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => setTheme("system")}>Sistema</DropdownMenuItem>
+                </DropdownMenuSubContent>
+              </DropdownMenuSub>
+
+              {/* Item: Ajuda */}
+              <DropdownMenuItem>
+                <HelpCircle className="size-4 mr-2" />
+                Ajuda
+              </DropdownMenuItem>
+
+              <DropdownMenuSeparator />
+
+              {/* Item: Sair */}
               <DropdownMenuItem onClick={() => console.log("Logout")} className="text-destructive">
                 <LogOut className="size-4 mr-2" />
                 Sair
