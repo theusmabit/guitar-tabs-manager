@@ -59,7 +59,7 @@ export function Metronome() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 p-1">
       <div className="text-center">
         <h3 className="text-2xl font-bold text-foreground mb-2">Metronome</h3>
         <p className="text-sm text-muted-foreground">Keep time while practicing</p>
