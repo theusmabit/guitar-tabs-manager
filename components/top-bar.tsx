@@ -2,11 +2,12 @@
 
 import type React from "react"
 import { useState } from "react"
-import { Music, Search, User, Bell, Upload, Palette } from "lucide-react"
+import { Search, User, Bell, Upload, Palette, Music } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { useTheme } from "next-themes"
+import { SidebarTrigger } from "@/components/ui/sidebar"
 
 interface TopBarProps {
   onSearch?: (query: string) => void
@@ -25,90 +26,67 @@ export function TopBar({ onSearch, onNavigateHome }: TopBarProps) {
   }
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-card border-b border-border shadow-sm">
-      <div className="flex items-center justify-between px-4 py-3 md:px-6 max-w-7xl mx-auto">
+    <header className="sticky top-0 z-40 flex h-16 shrink-0 items-center gap-2 border-b bg-background px-4">
+      <div className="flex items-center gap-2 flex-1">
+        <SidebarTrigger className="-ml-1" />
+        <div className="h-4 w-px bg-border mx-2 hidden md:block" />
         <button onClick={onNavigateHome} className="flex items-center gap-2 hover:opacity-80 transition-opacity">
-          <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center">
-            <Music className="w-5 h-5 text-primary-foreground" />
-          </div>
           <span className="font-semibold text-foreground hidden sm:inline">
             Chord<span className="text-primary">Master</span>
           </span>
         </button>
 
         {/* Center: Search Bar */}
-        <form onSubmit={handleSearch} className="flex-1 max-w-md mx-4">
+        <form onSubmit={handleSearch} className="flex-1 max-w-md mx-4 hidden md:block">
           <div className="relative">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
             <Input
               type="search"
-              placeholder="Search by artist or song..."
+              placeholder="Buscar artista ou música..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10 bg-secondary border-border text-foreground placeholder:text-muted-foreground"
+              className="pl-10 bg-muted/50 border-none"
             />
           </div>
         </form>
+      </div>
 
-        <div className="flex items-center gap-2">
-          <Button className="bg-primary hover:bg-primary/90 text-primary-foreground hidden sm:flex" size="sm">
-            <Upload className="w-4 h-4 mr-2" />
-            Upload Chord
-          </Button>
+      <div className="flex items-center gap-2">
+        <Button className="hidden sm:flex" size="sm">
+          <Upload className="w-4 h-4 mr-2" />
+          Upload
+        </Button>
 
-          {/* Appearance */}
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="text-muted-foreground hover:text-foreground hover:bg-accent"
-                title="Appearance"
-              >
-                <Palette className="w-5 h-5" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="bg-card border-border">
-              <DropdownMenuItem onClick={() => setTheme("light")} className="text-foreground hover:bg-accent cursor-pointer">
-                Light
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => setTheme("dark")} className="text-foreground hover:bg-accent cursor-pointer">
-                Dark
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => setTheme("system")} className="text-foreground hover:bg-accent cursor-pointer">
-                System
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" size="icon" className="text-muted-foreground">
+              <Palette className="w-5 h-5" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuItem onClick={() => setTheme("light")}>Claro</DropdownMenuItem>
+            <DropdownMenuItem onClick={() => setTheme("dark")}>Escuro</DropdownMenuItem>
+            <DropdownMenuItem onClick={() => setTheme("system")}>Sistema</DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
 
-          {/* Notifications */}
-          <Button
-            variant="ghost"
-            size="icon"
-            className="text-muted-foreground hover:text-foreground hover:bg-accent relative"
-          >
-            <Bell className="w-5 h-5" />
-            <span className="absolute top-2 right-2 w-2 h-2 bg-primary rounded-full border-2 border-card" />
-          </Button>
+        <Button variant="ghost" size="icon" className="text-muted-foreground relative">
+          <Bell className="w-5 h-5" />
+          <span className="absolute top-2 right-2 w-2 h-2 bg-primary rounded-full border-2 border-background" />
+        </Button>
 
-          {/* User Menu */}
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="text-muted-foreground hover:text-foreground hover:bg-accent"
-              >
-                <User className="w-5 h-5" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="bg-card border-border">
-              <DropdownMenuItem className="text-foreground hover:bg-accent cursor-pointer">Profile</DropdownMenuItem>
-              <DropdownMenuItem className="text-foreground hover:bg-accent cursor-pointer">Settings</DropdownMenuItem>
-              <DropdownMenuItem className="text-foreground hover:bg-accent cursor-pointer">Log Out</DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </div>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" size="icon" className="text-muted-foreground">
+              <User className="w-5 h-5" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuItem>Perfil</DropdownMenuItem>
+            <DropdownMenuItem>Configurações</DropdownMenuItem>
+            <DropdownMenuItem>Sair</DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
     </header>
   )

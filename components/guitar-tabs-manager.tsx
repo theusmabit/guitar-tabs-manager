@@ -4,11 +4,11 @@ import { useState, useEffect, useMemo } from "react"
 import { Library } from "./library"
 import { SongViewer } from "./song-viewer"
 import { AddSong } from "./add-song"
-import { Sidebar } from "./sidebar"
-import { MobileSidebar } from "./mobile-sidebar"
+import { AppSidebar } from "./app-sidebar"
 import { SettingsView } from "./settings-view"
 import { Homepage } from "./homepage"
 import { TopBar } from "./top-bar"
+import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar"
 import type { Song, Folder } from "@/lib/types"
 import { getMockSongs, saveSongs, loadSongs, saveFolders, loadFolders } from "@/lib/storage"
 
@@ -38,15 +38,11 @@ export function GuitarTabsManager() {
   }, [])
 
   useEffect(() => {
-    if (songs.length > 0) {
-      saveSongs(songs)
-    }
+    if (songs.length > 0) saveSongs(songs)
   }, [songs])
 
   useEffect(() => {
-    if (folders.length > 0) {
-      saveFolders(folders)
-    }
+    if (folders.length > 0) saveFolders(folders)
   }, [folders])
 
   const handleAddSong = (song: Song) => {
@@ -90,9 +86,7 @@ export function GuitarTabsManager() {
 
   const handleDeleteFolder = (folderId: string) => {
     setFolders(folders.filter((f) => f.id !== folderId))
-    if (selectedFolder === folderId) {
-      setSelectedFolder(null)
-    }
+    if (selectedFolder === folderId) setSelectedFolder(null)
   }
 
   const handleAddSongToFolder = (songId: string, folderId: string) => {
@@ -103,15 +97,9 @@ export function GuitarTabsManager() {
     setFolders(folders.map((f) => (f.id === folderId ? { ...f, songIds: f.songIds.filter((id) => id !== songId) } : f)))
   }
 
-  const handleImportSongs = (importedSongs: Song[]) => {
-    setSongs([...songs, ...importedSongs])
-  }
-
   const handleSearch = (query: string) => {
     setSearchQuery(query)
-    if (query.trim()) {
-      setCurrentView("library")
-    }
+    if (query.trim()) setCurrentView("library")
   }
 
   const filteredSongs = useMemo(() => {
@@ -137,68 +125,17 @@ export function GuitarTabsManager() {
   const renderContent = () => {
     switch (currentView) {
       case "home":
-        return (
-          <Homepage
-            songs={songs}
-            favoriteSongs={favoriteSongs}
-            folders={folders}
-            onViewSong={handleViewSong}
-            onNavigate={setCurrentView}
-          />
-        )
+        return <Homepage songs={songs} favoriteSongs={favoriteSongs} folders={folders} onViewSong={handleViewSong} onNavigate={setCurrentView} />
       case "library":
-        return (
-          <Library
-            songs={searchQuery ? filteredSongs : songs}
-            onViewSong={handleViewSong}
-            onToggleFavorite={handleToggleFavorite}
-            onDeleteSong={handleDeleteSong}
-            folders={folders}
-            onAddSongToFolder={handleAddSongToFolder}
-            title={searchQuery ? `Search Results for "${searchQuery}"` : "All Songs"}
-          />
-        )
+        return <Library songs={searchQuery ? filteredSongs : songs} onViewSong={handleViewSong} onToggleFavorite={handleToggleFavorite} onDeleteSong={handleDeleteSong} folders={folders} onAddSongToFolder={handleAddSongToFolder} title={searchQuery ? `Resultados para "${searchQuery}"` : "Todas as Músicas"} />
       case "favorites":
-        return (
-          <Library
-            songs={favoriteSongs}
-            onViewSong={handleViewSong}
-            onToggleFavorite={handleToggleFavorite}
-            onDeleteSong={handleDeleteSong}
-            folders={folders}
-            onAddSongToFolder={handleAddSongToFolder}
-            title="Favorite Songs"
-          />
-        )
+        return <Library songs={favoriteSongs} onViewSong={handleViewSong} onToggleFavorite={handleToggleFavorite} onDeleteSong={handleDeleteSong} folders={folders} onAddSongToFolder={handleAddSongToFolder} title="Favoritos" />
       case "folders":
-        return (
-          <Library
-            songs={selectedFolder ? folderSongs : []}
-            onViewSong={handleViewSong}
-            onToggleFavorite={handleToggleFavorite}
-            onDeleteSong={handleDeleteSong}
-            folders={folders}
-            onAddSongToFolder={handleAddSongToFolder}
-            onAddFolder={handleAddFolder}
-            onDeleteFolder={handleDeleteFolder}
-            onSelectFolder={setSelectedFolder}
-            selectedFolder={selectedFolder}
-            onRemoveSongFromFolder={handleRemoveSongFromFolder}
-            showFolderManager
-            title="Folders"
-          />
-        )
+        return <Library songs={selectedFolder ? folderSongs : []} onViewSong={handleViewSong} onToggleFavorite={handleToggleFavorite} onDeleteSong={handleDeleteSong} folders={folders} onAddSongToFolder={handleAddSongToFolder} onAddFolder={() => handleAddFolder("Nova Pasta")} onDeleteFolder={handleDeleteFolder} onSelectFolder={setSelectedFolder} selectedFolder={selectedFolder} onRemoveSongFromFolder={handleRemoveSongFromFolder} showFolderManager title="Pastas" />
       case "add":
-        return <AddSong onAddSong={handleAddSong} onImportSongs={handleImportSongs} />
+        return <AddSong onAddSong={handleAddSong} onImportSongs={(s) => setSongs([...songs, ...s])} />
       case "song":
-        return selectedSong ? (
-          <SongViewer
-            song={selectedSong}
-            onToggleFavorite={handleToggleFavorite}
-            onUpdateSong={handleUpdateSong}
-            onBack={() => setCurrentView("library")}
-          />
-        ) : null
+        return selectedSong ? <SongViewer song={selectedSong} onUpdateSong={handleUpdateSong} onBack={() => setCurrentView("library")} /> : null
       case "settings":
         return <SettingsView songs={songs} folders={folders} />
       default:
@@ -207,11 +144,12 @@ export function GuitarTabsManager() {
   }
 
   return (
-    <div className="flex h-screen bg-background text-foreground">
-      <TopBar onSearch={handleSearch} onNavigateHome={() => setCurrentView("home")} />
-      <Sidebar currentView={currentView} onNavigate={setCurrentView} />
-      <MobileSidebar currentView={currentView} onNavigate={setCurrentView} />
-      <main className="flex-1 overflow-auto pt-16">{renderContent()}</main>
-    </div>
+    <SidebarProvider>
+      <AppSidebar currentView={currentView} onNavigate={setCurrentView} />
+      <SidebarInset>
+        <TopBar onSearch={handleSearch} onNavigateHome={() => setCurrentView("home")} />
+        <main className="flex flex-1 flex-col">{renderContent()}</main>
+      </SidebarInset>
+    </SidebarProvider>
   )
 }
