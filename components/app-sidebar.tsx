@@ -72,7 +72,7 @@ export function AppSidebar({ currentView, onNavigate, ...props }: AppSidebarProp
                     size="lg"
                   >
                     <item.icon />
-                    <span>{item.title}</span>
+                    <span className="group-data-[collapsible=icon]:hidden">{item.title}</span>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
