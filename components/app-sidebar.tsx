@@ -111,19 +111,6 @@ export function AppSidebar({ currentView, onNavigate, ...props }: AppSidebarProp
               Configurações
             </DropdownMenuItem>
 
-            {/* Submenu: Tema */}
-            <DropdownMenuSub>
-              <DropdownMenuSubTrigger>
-                <Palette className="size-4 mr-2" />
-                Tema
-              </DropdownMenuSubTrigger>
-              <DropdownMenuSubContent>
-                <DropdownMenuItem onClick={() => setTheme("light")}>Claro</DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setTheme("dark")}>Escuro</DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setTheme("system")}>Sistema</DropdownMenuItem>
-              </DropdownMenuSubContent>
-            </DropdownMenuSub>
-
             {/* Item: Ajuda */}
             <DropdownMenuItem>
               <HelpCircle className="size-4 mr-2" />

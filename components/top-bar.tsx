@@ -5,6 +5,7 @@ import { useState } from "react"
 import { Search, Bell, Upload } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import { ThemeToggle } from "./theme-toggle"
 
 interface TopBarProps {
   onSearch?: (query: string) => void
@@ -49,6 +50,9 @@ export function TopBar({ onSearch, onNavigateHome }: TopBarProps) {
           <Bell className="w-5 h-5" />
           <span className="absolute top-2 right-2 w-2 h-2 bg-primary rounded-full border-2 border-background" />
         </Button>
+        
+        {/* Theme Toggle */}
+        <ThemeToggle />
       </div>
     </header>
   )
