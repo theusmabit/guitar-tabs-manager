@@ -1,9 +1,10 @@
 "use client"
 
 import { useState, useRef, useEffect } from "react"
-import { SkipBack, SkipForward, Volume2, Shuffle } from "lucide-react"
+import { SkipBack, SkipForward, Volume2, Play, Pause } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Slider } from "@/components/ui/slider"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import type { Song } from "@/lib/types"
 
 interface MusicPlayerProps {
@@ -60,6 +61,11 @@ export function MusicPlayer({ song, audioUrl }: MusicPlayerProps) {
     setCurrentTime(value[0])
   }
 
+  const skipTime = (seconds: number) => {
+    if (!audioRef.current) return
+    audioRef.current.currentTime = Math.max(0, Math.min(duration, audioRef.current.currentTime + seconds))
+  }
+
   const handleVolumeChange = (value: number[]) => {
     setVolume(value[0])
   }
@@ -71,76 +77,78 @@ export function MusicPlayer({ song, audioUrl }: MusicPlayerProps) {
   }
 
   return (
-    <div className="bg-[#2a3441] rounded-lg p-6 mb-6 shadow-lg">
+    <Card className="rounded-sm border-border shadow-none overflow-hidden">
       <audio ref={audioRef} src={audioUrl || `/placeholder-audio.mp3`} />
-
-      <div className="space-y-4">
-        {/* Song Title and Time */}
-        <div className="flex items-center justify-between">
-          <h3 className="text-lg font-semibold text-white">{song.title}</h3>
-          <div className="text-sm text-gray-400">
-            {formatTime(currentTime)} / {formatTime(duration)}
+      <CardHeader className="pb-3">
+        <CardTitle className="text-sm font-semibold">Music Player</CardTitle>
+      </CardHeader>
+      <CardContent className="space-y-4">
+        {/* Progress Bar and Time */}
+        <div className="space-y-2">
+          <Slider
+            value={[currentTime]}
+            max={duration || 100}
+            step={0.1}
+            onValueChange={handleSeek}
+            className="w-full"
+          />
+          <div className="flex justify-between text-[10px] text-muted-foreground font-mono">
+            <span>{formatTime(currentTime)}</span>
+            <span>{formatTime(duration)}</span>
           </div>
         </div>
 
-        {/* Progress Bar */}
-        <Slider
-          value={[currentTime]}
-          max={duration || 100}
-          step={0.1}
-          onValueChange={handleSeek}
-          className="w-full [&_[role=slider]]:bg-white [&_[role=slider]]:border-white"
-        />
-
         {/* Controls Row */}
-        <div className="flex items-center justify-between">
-          {/* Playback Controls */}
-          <div className="flex items-center gap-3">
-            <Button
-              variant="ghost"
-              size="icon"
-              className="text-gray-300 hover:text-white hover:bg-transparent"
-              disabled={!audioUrl}
-            >
-              <SkipBack className="w-5 h-5" />
-            </Button>
+        <div className="flex items-center justify-center gap-2">
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-8 w-8 text-muted-foreground"
+            onClick={() => skipTime(-5)}
+            disabled={!audioUrl}
+          >
+            <SkipBack className="w-4 h-4" />
+          </Button>
 
-            <Button
-              variant="ghost"
-              size="icon"
-              className="text-gray-300 hover:text-white hover:bg-transparent"
-              disabled={!audioUrl}
-            >
-              <Shuffle className="w-5 h-5" />
-            </Button>
+          <Button
+            variant="outline"
+            size="icon"
+            className="h-10 w-10 rounded-full border-border"
+            onClick={togglePlay}
+            disabled={!audioUrl}
+          >
+            {isPlaying ? <Pause className="w-5 h-5" /> : <Play className="w-5 h-5 ml-0.5" />}
+          </Button>
 
-            <Button
-              variant="ghost"
-              size="icon"
-              className="text-gray-300 hover:text-white hover:bg-transparent"
-              disabled={!audioUrl}
-            >
-              <SkipForward className="w-5 h-5" />
-            </Button>
-          </div>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-8 w-8 text-muted-foreground"
+            onClick={() => skipTime(5)}
+            disabled={!audioUrl}
+          >
+            <SkipForward className="w-4 h-4" />
+          </Button>
+        </div>
 
-          {/* Volume Control */}
-          <div className="flex items-center gap-3 w-32">
-            <Volume2 className="w-4 h-4 text-gray-400" />
-            <Slider
-              value={[volume]}
-              max={100}
-              step={1}
-              onValueChange={handleVolumeChange}
-              className="w-full [&_[role=slider]]:bg-white [&_[role=slider]]:border-white"
-            />
-          </div>
+        {/* Volume Control */}
+        <div className="flex items-center gap-2">
+          <Volume2 className="w-3.5 h-3.5 text-muted-foreground shrink-0" />
+          <Slider
+            value={[volume]}
+            max={100}
+            step={1}
+            onValueChange={handleVolumeChange}
+            className="flex-1"
+          />
         </div>
 
         {!audioUrl && (
-          <p className="text-xs text-center text-gray-500 italic mt-2">No audio file available for this song</p>
+          <p className="text-[10px] text-center text-muted-foreground italic">
+            No audio file available
+          </p>
         )}
-      </div>
-    </div>
+      </CardContent>
+    </Card>
   )
 }

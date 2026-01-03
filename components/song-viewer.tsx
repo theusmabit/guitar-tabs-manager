@@ -1,15 +1,11 @@
 "use client"
 
 import type React from "react"
-import { useState, useRef, useEffect } from "react"
+import { useState, useEffect } from "react"
 import {
   ChevronLeft,
   ChevronRight,
   Play,
-  Pause,
-  SkipBack,
-  SkipForward,
-  Volume2,
   Heart,
   Plus,
   ChevronDown,
@@ -18,12 +14,12 @@ import {
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { Slider } from "@/components/ui/slider"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import type { Song } from "@/lib/types"
 import { transposeChord } from "@/lib/transpose"
 import { Tuner } from "@/components/tuner"
 import { Metronome } from "@/components/metronome"
+import { MusicPlayer } from "@/components/music-player"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
@@ -54,12 +50,6 @@ export function SongViewer({ song, onUpdateSong, onBack }: SongViewerProps) {
     tags: song.tags.join(", "),
   })
 
-  const [isPlaying, setIsPlaying] = useState(false)
-  const [currentTime, setCurrentTime] = useState(0)
-  const [duration, setDuration] = useState(210)
-  const [volume, setVolume] = useState(70)
-  const audioRef = useRef<HTMLAudioElement>(null)
-
   const transposedContent = transposeContent(song.content, transpose)
   const transposedKey = transposeChord(song.key, transpose)
 
@@ -75,58 +65,6 @@ export function SongViewer({ song, onUpdateSong, onBack }: SongViewerProps) {
     }
     return () => clearInterval(interval)
   }, [autoScroll, scrollSpeed])
-
-  useEffect(() => {
-    const audio = audioRef.current
-    if (!audio) return
-
-    const handleTimeUpdate = () => setCurrentTime(audio.currentTime)
-    const handleLoadedMetadata = () => setDuration(audio.duration)
-    const handleEnded = () => setIsPlaying(false)
-
-    audio.addEventListener("timeupdate", handleTimeUpdate)
-    audio.addEventListener("loadedmetadata", handleLoadedMetadata)
-    audio.addEventListener("ended", handleEnded)
-
-    return () => {
-      audio.removeEventListener("timeupdate", handleTimeUpdate)
-      audio.removeEventListener("loadedmetadata", handleLoadedMetadata)
-      audio.removeEventListener("ended", handleEnded)
-    }
-  }, [])
-
-  useEffect(() => {
-    if (audioRef.current) {
-      audioRef.current.volume = volume / 100
-    }
-  }, [volume])
-
-  const togglePlay = () => {
-    if (!audioRef.current) return
-    if (isPlaying) {
-      audioRef.current.pause()
-    } else {
-      audioRef.current.play()
-    }
-    setIsPlaying(!isPlaying)
-  }
-
-  const handleSeek = (value: number[]) => {
-    if (!audioRef.current) return
-    audioRef.current.currentTime = value[0]
-    setCurrentTime(value[0])
-  }
-
-  const skipTime = (seconds: number) => {
-    if (!audioRef.current) return
-    audioRef.current.currentTime = Math.max(0, Math.min(duration, currentTime + seconds))
-  }
-
-  const formatTime = (time: number) => {
-    const minutes = Math.floor(time / 60)
-    const seconds = Math.floor(time % 60)
-    return `${minutes}:${seconds.toString().padStart(2, "0")}`
-  }
 
   const handleSaveEdit = () => {
     const updatedSong: Song = {
@@ -144,22 +82,14 @@ export function SongViewer({ song, onUpdateSong, onBack }: SongViewerProps) {
     setIsEditing(false)
   }
 
-  const enterGigMode = () => {
-    if (document.documentElement.requestFullscreen) {
-      document.documentElement.requestFullscreen()
-    }
-  }
-
   return (
     <div className="min-h-screen bg-background">
-      <audio ref={audioRef} src="/placeholder-audio.mp3" />
-
-      <div className="pt-16 pb-32">
+      <div className="pt-16 pb-20">
         <div className="max-w-7xl mx-auto px-4 md:px-6 lg:px-8">
           <div className="flex gap-6">
             {leftSidebarOpen && (
               <div className="hidden lg:block w-16 space-y-4">
-                <div className="sticky top-20">{/* Empty for now - can add quick actions */}</div>
+                <div className="sticky top-20">{/* Quick actions */}</div>
               </div>
             )}
 
@@ -213,7 +143,7 @@ export function SongViewer({ song, onUpdateSong, onBack }: SongViewerProps) {
               </div>
 
               {twoColumnMode ? (
-                <Card className="rounded-sm border-border shadow-none">
+                <Card className="rounded-sm border-border shadow-none mt-4">
                   <CardContent className="p-6 md:p-8">
                     <div className="grid grid-cols-2 gap-8">
                       <div>
@@ -236,7 +166,7 @@ export function SongViewer({ song, onUpdateSong, onBack }: SongViewerProps) {
                   </CardContent>
                 </Card>
               ) : (
-                <Card className="rounded-sm border-border shadow-none">
+                <Card className="rounded-sm border-border shadow-none mt-4">
                   <CardContent className="p-6 md:p-8">
                     <pre
                       className="font-mono whitespace-pre-wrap leading-relaxed"
@@ -263,6 +193,9 @@ export function SongViewer({ song, onUpdateSong, onBack }: SongViewerProps) {
             {rightSidebarOpen && (
               <div className="hidden lg:block w-80 space-y-4">
                 <div className="sticky top-20 space-y-4">
+                  {/* Music Player in the Sidebar */}
+                  <MusicPlayer song={song} />
+
                   <Card className="rounded-sm border-border shadow-none">
                     <CardHeader className="pb-3">
                       <h3 className="text-sm font-semibold text-foreground">Song Controls</h3>
@@ -391,52 +324,6 @@ export function SongViewer({ song, onUpdateSong, onBack }: SongViewerProps) {
                 </div>
               </div>
             )}
-          </div>
-        </div>
-      </div>
-
-      <div className="fixed bottom-0 left-0 right-0 bg-card border-t border-border shadow-lg z-50">
-        <div className="max-w-7xl mx-auto px-4 md:px-6 lg:px-8 py-3">
-          <div className="flex items-center gap-4">
-            <div className="flex items-center gap-2">
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => skipTime(-5)}
-                className="h-9 w-9 rounded-sm text-muted-foreground hover:text-foreground"
-                title="Rewind 5 seconds"
-              >
-                <SkipBack className="w-4 h-4" />
-              </Button>
-              <Button
-                variant="outline"
-                size="icon"
-                onClick={togglePlay}
-                className="h-10 w-10 rounded-full border-border hover:bg-accent bg-transparent"
-              >
-                {isPlaying ? <Pause className="w-5 h-5" /> : <Play className="w-5 h-5 ml-0.5" />}
-              </Button>
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => skipTime(5)}
-                className="h-9 w-9 rounded-sm text-muted-foreground hover:text-foreground"
-                title="Forward 5 seconds"
-              >
-                <SkipForward className="w-4 h-4" />
-              </Button>
-            </div>
-
-            <div className="flex-1 flex items-center gap-2">
-              <span className="text-xs text-muted-foreground font-mono min-w-[40px]">{formatTime(currentTime)}</span>
-              <Slider value={[currentTime]} max={duration} step={0.1} onValueChange={handleSeek} className="flex-1" />
-              <span className="text-xs text-muted-foreground font-mono min-w-[40px]">{formatTime(duration)}</span>
-            </div>
-
-            <div className="flex items-center gap-3 min-w-[150px] justify-end">
-              <Volume2 className="w-4 h-4 text-muted-foreground" />
-              <Slider value={[volume]} onValueChange={(v) => setVolume(v[0])} max={100} step={1} className="w-24" />
-            </div>
           </div>
         </div>
       </div>
