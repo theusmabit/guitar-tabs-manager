@@ -1,10 +1,9 @@
 "use client"
 
 import * as React from "react"
-import { Home, Music, Heart, Folder, Plus, Settings, LogOut, ChevronDown, HelpCircle } from "lucide-react"
+import { Home, Music, Heart, Folder, Plus, Settings, LogOut, ChevronDown, HelpCircle, User } from "lichen-react"
 import { useTheme } from "next-themes"
 import { Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarRail, SidebarFooter, useSidebar, } from "@/components/ui/sidebar"
-import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuSeparator } from "@/components/ui/dropdown-menu"
 
@@ -47,7 +46,6 @@ export function AppSidebar({ currentView, onNavigate, ...props }: AppSidebarProp
   const mockUser = {
     name: "Usuário Mock",
     email: "user@example.com",
-    initials: "UM",
   }
 
   return (
@@ -92,11 +90,9 @@ export function AppSidebar({ currentView, onNavigate, ...props }: AppSidebarProp
               role="button"
               tabIndex={0}
             >
-              <Avatar className="size-8 shrink-0">
-                <AvatarFallback className="bg-primary text-primary-foreground text-xs">
-                  {mockUser.initials}
-                </AvatarFallback>
-              </Avatar>
+              <div className="bg-primary text-primary-foreground flex size-8 shrink-0 items-center justify-center rounded-md">
+                <User className="size-4" />
+              </div>
               <div className="flex-1 min-w-0 group-data-[collapsible=icon]:hidden">
                 <p className="text-sm font-medium truncate">{mockUser.name}</p>
                 <p className="text-xs text-muted-foreground truncate">{mockUser.email}</p>
