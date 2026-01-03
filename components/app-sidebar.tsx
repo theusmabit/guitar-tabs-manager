@@ -83,65 +83,62 @@ export function AppSidebar({ currentView, onNavigate, ...props }: AppSidebarProp
       </SidebarContent>
 
       <SidebarFooter className="border-t border-sidebar-border p-2">
-        {/* User Profile Row */}
-        <div className="flex items-center gap-2 p-2 rounded-md hover:bg-sidebar-accent">
-          <Avatar className="size-8 shrink-0">
-            <AvatarFallback className="bg-primary text-primary-foreground text-xs">
-              {mockUser.initials}
-            </AvatarFallback>
-          </Avatar>
-          <div className="flex-1 min-w-0 group-data-[collapsible=icon]:hidden">
-            <p className="text-sm font-medium truncate">{mockUser.name}</p>
-            <p className="text-xs text-muted-foreground truncate">{mockUser.email}</p>
-          </div>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button
-                variant="ghost"
-                size="icon-sm"
-                className="text-muted-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground shrink-0 group-data-[collapsible=icon]:size-8 group-data-[collapsible=icon]:p-0"
-                tooltip="Opções de Usuário"
-              >
-                <ChevronDown className="size-4" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" side="top" sideOffset={8} className="w-56">
-              
-              {/* Item: Configurações */}
-              <DropdownMenuItem onClick={() => onNavigate("settings")}>
-                <Settings className="size-4 mr-2" />
-                Configurações
-              </DropdownMenuItem>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            {/* User Profile Row - Agora é o Trigger */}
+            <div
+              className="flex items-center gap-2 p-2 rounded-md hover:bg-sidebar-accent cursor-pointer"
+              role="button"
+              tabIndex={0}
+            >
+              <Avatar className="size-8 shrink-0">
+                <AvatarFallback className="bg-primary text-primary-foreground text-xs">
+                  {mockUser.initials}
+                </AvatarFallback>
+              </Avatar>
+              <div className="flex-1 min-w-0 group-data-[collapsible=icon]:hidden">
+                <p className="text-sm font-medium truncate">{mockUser.name}</p>
+                <p className="text-xs text-muted-foreground truncate">{mockUser.email}</p>
+              </div>
+              <ChevronDown className="size-4 text-muted-foreground shrink-0 group-data-[collapsible=icon]:size-8 group-data-[collapsible=icon]:p-2" />
+            </div>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" side="top" sideOffset={8} className="w-56">
+            
+            {/* Item: Configurações */}
+            <DropdownMenuItem onClick={() => onNavigate("settings")}>
+              <Settings className="size-4 mr-2" />
+              Configurações
+            </DropdownMenuItem>
 
-              {/* Submenu: Tema */}
-              <DropdownMenuSub>
-                <DropdownMenuSubTrigger>
-                  <Palette className="size-4 mr-2" />
-                  Tema
-                </DropdownMenuSubTrigger>
-                <DropdownMenuSubContent>
-                  <DropdownMenuItem onClick={() => setTheme("light")}>Claro</DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => setTheme("dark")}>Escuro</DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => setTheme("system")}>Sistema</DropdownMenuItem>
-                </DropdownMenuSubContent>
-              </DropdownMenuSub>
+            {/* Submenu: Tema */}
+            <DropdownMenuSub>
+              <DropdownMenuSubTrigger>
+                <Palette className="size-4 mr-2" />
+                Tema
+              </DropdownMenuSubTrigger>
+              <DropdownMenuSubContent>
+                <DropdownMenuItem onClick={() => setTheme("light")}>Claro</DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setTheme("dark")}>Escuro</DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setTheme("system")}>Sistema</DropdownMenuItem>
+              </DropdownMenuSubContent>
+            </DropdownMenuSub>
 
-              {/* Item: Ajuda */}
-              <DropdownMenuItem>
-                <HelpCircle className="size-4 mr-2" />
-                Ajuda
-              </DropdownMenuItem>
+            {/* Item: Ajuda */}
+            <DropdownMenuItem>
+              <HelpCircle className="size-4 mr-2" />
+              Ajuda
+            </DropdownMenuItem>
 
-              <DropdownMenuSeparator />
+            <DropdownMenuSeparator />
 
-              {/* Item: Sair */}
-              <DropdownMenuItem onClick={() => console.log("Logout")} className="text-destructive">
-                <LogOut className="size-4 mr-2" />
-                Sair
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </div>
+            {/* Item: Sair */}
+            <DropdownMenuItem onClick={() => console.log("Logout")} className="text-destructive">
+              <LogOut className="size-4 mr-2" />
+              Sair
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>
