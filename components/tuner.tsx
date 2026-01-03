@@ -68,7 +68,7 @@ export function Tuner() {
   }
 
   return (
-    <div className="space-y-6 p-1">
+    <div className="space-y-6">
       <div className="text-center">
         <h3 className="text-lg font-bold text-foreground mb-2">Chromatic Tuner</h3>
         <p className="text-xs text-muted-foreground">Tap a note to hear reference pitch or use microphone</p>
