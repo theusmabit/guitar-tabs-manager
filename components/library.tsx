@@ -1,22 +1,21 @@
 "use client"
 
 import { useState, useMemo } from "react"
-import { Search, Heart, Trash2, Plus, FolderPlus, X, Filter } from "lucide-react"
+import { Search, Heart, Trash2, Plus, FolderPlus, X, Filter, List, Grid3X3, Music } from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { 
-  Select, 
-  SelectContent, 
-  SelectItem, 
-  SelectTrigger, 
-  SelectValue 
-} from "@/components/ui/select"
 import type { Song, Folder } from "@/lib/types"
 import { cn } from "@/lib/utils"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from "@/components/ui/dialog"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
+import { 
+  ContextMenu, 
+  ContextMenuContent, 
+  ContextMenuItem, 
+  ContextMenuTrigger 
+} from "@/components/ui/context-menu"
 
 interface LibraryProps {
   songs: Song[]
@@ -53,9 +52,18 @@ export function Library({
   const [newFolderName, setNewFolderName] = useState("")
   const [isCreatingFolder, setIsCreatingFolder] = useState(false)
   const [filters, setFilters] = useState({
-    genre: "all",
-    artist: "all",
-    key: "all",
+    genre: "",
+    artist: "",
+    key: "",
+  })
+  const [viewMode, setViewMode] = useState<"grid" | "list">("grid")
+  const [suggestions, setSuggestions] = useState({
+    genres: [] as string[],
+    artists: [] as string[],
+  })
+  const [showSuggestions, setShowSuggestions] = useState({
+    genre: false,
+    artist: false,
   })
 
   // Extrair opções únicas para os filtros
@@ -79,6 +87,26 @@ export function Library({
     return Array.from(keys).sort()
   }, [songs])
 
+  // Atualizar sugestões com base no input do usuário
+  const updateSuggestions = (type: "genre" | "artist", value: string) => {
+    if (value === "") {
+      setSuggestions(prev => ({ ...prev, [type]: [] }))
+      return
+    }
+    
+    if (type === "genre") {
+      const filtered = uniqueGenres.filter(g => 
+        g.toLowerCase().includes(value.toLowerCase())
+      ).slice(0, 5)
+      setSuggestions(prev => ({ ...prev, genres: filtered }))
+    } else {
+      const filtered = uniqueArtists.filter(a => 
+        a.toLowerCase().includes(value.toLowerCase())
+      ).slice(0, 5)
+      setSuggestions(prev => ({ ...prev, artists: filtered }))
+    }
+  }
+
   const filteredSongs = useMemo(() => {
     return songs.filter((song) => {
       const matchesSearch = 
@@ -87,15 +115,15 @@ export function Library({
         song.artist.toLowerCase().includes(searchQuery.toLowerCase())
       
       const matchesGenre = 
-        filters.genre === "all" || 
-        song.tags.includes(filters.genre)
+        filters.genre === "" || 
+        song.tags.some(tag => tag.toLowerCase().includes(filters.genre.toLowerCase()))
       
       const matchesArtist = 
-        filters.artist === "all" || 
-        song.artist === filters.artist
+        filters.artist === "" || 
+        song.artist.toLowerCase().includes(filters.artist.toLowerCase())
       
       const matchesKey = 
-        filters.key === "all" || 
+        filters.key === "" || 
         song.key === filters.key
       
       return matchesSearch && matchesGenre && matchesArtist && matchesKey
@@ -112,11 +140,21 @@ export function Library({
 
   const clearFilters = () => {
     setFilters({
-      genre: "all",
-      artist: "all",
-      key: "all",
+      genre: "",
+      artist: "",
+      key: "",
     })
     setSearchQuery("")
+  }
+
+  const handleGenreSelect = (genre: string) => {
+    setFilters(prev => ({ ...prev, genre }))
+    setShowSuggestions({ genre: false, artist: false })
+  }
+
+  const handleArtistSelect = (artist: string) => {
+    setFilters(prev => ({ ...prev, artist }))
+    setShowSuggestions({ genre: false, artist: false })
   }
 
   return (
@@ -206,61 +244,120 @@ export function Library({
             />
           </div>
           
-          <Button 
-            variant="outline" 
-            size="sm"
-            onClick={clearFilters}
-            className="border-border text-muted-foreground hover:bg-accent"
-          >
-            <Filter className="w-4 h-4 mr-2" />
-            Clear Filters
-          </Button>
+          <div className="flex gap-2">
+            <Button 
+              variant="outline" 
+              size="sm"
+              onClick={clearFilters}
+              className="border-border text-muted-foreground hover:bg-accent"
+            >
+              <Filter className="w-4 h-4 mr-2" />
+              Clear Filters
+            </Button>
+            
+            <Button 
+              variant="outline" 
+              size="sm"
+              onClick={() => setViewMode(viewMode === "grid" ? "list" : "grid")}
+              className="border-border text-muted-foreground hover:bg-accent"
+            >
+              {viewMode === "grid" ? (
+                <>
+                  <List className="w-4 h-4 mr-2" />
+                  List View
+                </>
+              ) : (
+                <>
+                  <Grid3X3 className="w-4 h-4 mr-2" />
+                  Grid View
+                </>
+              )}
+            </Button>
+          </div>
         </div>
         
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-          <div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+          {/* Genre Filter with Suggestions */}
+          <div className="relative">
             <label className="text-sm font-medium text-muted-foreground mb-1 block">Genre</label>
-            <Select value={filters.genre} onValueChange={(value) => setFilters({...filters, genre: value})}>
-              <SelectTrigger className="bg-secondary border-border text-foreground">
-                <SelectValue placeholder="All genres" />
-              </SelectTrigger>
-              <SelectContent className="bg-card border-border">
-                <SelectItem value="all">All genres</SelectItem>
-                {uniqueGenres.map((genre) => (
-                  <SelectItem key={genre} value={genre}>{genre}</SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            <Input
+              placeholder="Filter by genre..."
+              value={filters.genre}
+              onChange={(e) => {
+                const value = e.target.value
+                setFilters(prev => ({ ...prev, genre: value }))
+                updateSuggestions("genre", value)
+                setShowSuggestions(prev => ({ ...prev, genre: value.length > 0 }))
+              }}
+              onFocus={() => setShowSuggestions(prev => ({ ...prev, genre: filters.genre.length > 0 }))}
+              onBlur={() => setTimeout(() => setShowSuggestions(prev => ({ ...prev, genre: false })), 200)}
+              className="bg-secondary border-border text-foreground placeholder:text-muted-foreground"
+            />
+            {showSuggestions.genre && suggestions.genres.length > 0 && (
+              <Card className="absolute z-10 w-full mt-1 bg-card border-border shadow-lg">
+                <CardContent className="p-2">
+                  {suggestions.genres.map((genre) => (
+                    <Button
+                      key={genre}
+                      variant="ghost"
+                      className="w-full justify-start text-foreground hover:bg-accent"
+                      onClick={() => handleGenreSelect(genre)}
+                    >
+                      {genre}
+                    </Button>
+                  ))}
+                </CardContent>
+              </Card>
+            )}
           </div>
           
-          <div>
+          {/* Artist Filter with Suggestions */}
+          <div className="relative">
             <label className="text-sm font-medium text-muted-foreground mb-1 block">Artist</label>
-            <Select value={filters.artist} onValueChange={(value) => setFilters({...filters, artist: value})}>
-              <SelectTrigger className="bg-secondary border-border text-foreground">
-                <SelectValue placeholder="All artists" />
-              </SelectTrigger>
-              <SelectContent className="bg-card border-border">
-                <SelectItem value="all">All artists</SelectItem>
-                {uniqueArtists.map((artist) => (
-                  <SelectItem key={artist} value={artist}>{artist}</SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            <Input
+              placeholder="Filter by artist..."
+              value={filters.artist}
+              onChange={(e) => {
+                const value = e.target.value
+                setFilters(prev => ({ ...prev, artist: value }))
+                updateSuggestions("artist", value)
+                setShowSuggestions(prev => ({ ...prev, artist: value.length > 0 }))
+              }}
+              onFocus={() => setShowSuggestions(prev => ({ ...prev, artist: filters.artist.length > 0 }))}
+              onBlur={() => setTimeout(() => setShowSuggestions(prev => ({ ...prev, artist: false })), 200)}
+              className="bg-secondary border-border text-foreground placeholder:text-muted-foreground"
+            />
+            {showSuggestions.artist && suggestions.artists.length > 0 && (
+              <Card className="absolute z-10 w-full mt-1 bg-card border-border shadow-lg">
+                <CardContent className="p-2">
+                  {suggestions.artists.map((artist) => (
+                    <Button
+                      key={artist}
+                      variant="ghost"
+                      className="w-full justify-start text-foreground hover:bg-accent"
+                      onClick={() => handleArtistSelect(artist)}
+                    >
+                      {artist}
+                    </Button>
+                  ))}
+                </CardContent>
+              </Card>
+            )}
           </div>
           
+          {/* Key Filter */}
           <div>
             <label className="text-sm font-medium text-muted-foreground mb-1 block">Key</label>
-            <Select value={filters.key} onValueChange={(value) => setFilters({...filters, key: value})}>
-              <SelectTrigger className="bg-secondary border-border text-foreground">
-                <SelectValue placeholder="All keys" />
-              </SelectTrigger>
-              <SelectContent className="bg-card border-border">
-                <SelectItem value="all">All keys</SelectItem>
-                {uniqueKeys.map((key) => (
-                  <SelectItem key={key} value={key}>{key}</SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            <select
+              value={filters.key}
+              onChange={(e) => setFilters(prev => ({ ...prev, key: e.target.value }))}
+              className="w-full bg-secondary border border-border rounded-md px-3 py-2 text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+            >
+              <option value="">All keys</option>
+              {uniqueKeys.map((key) => (
+                <option key={key} value={key}>{key}</option>
+              ))}
+            </select>
           </div>
         </div>
       </div>
@@ -271,7 +368,8 @@ export function Library({
           <p className="text-lg">No songs found</p>
           <p className="text-sm">Try adjusting your search or filters</p>
         </div>
-      ) : (
+      ) : viewMode === "grid" ? (
+        // Grid View (modo atual)
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {filteredSongs.map((song) => (
             <Card
@@ -377,15 +475,86 @@ export function Library({
             </Card>
           ))}
         </div>
+      ) : (
+        // List View (novo modo)
+        <Card className="bg-card border-border">
+          <CardContent className="p-0">
+            <div className="divide-y divide-border">
+              {filteredSongs.map((song) => (
+                <ContextMenu key={song.id}>
+                  <ContextMenuTrigger>
+                    <div 
+                      className="flex items-center p-4 hover:bg-accent cursor-pointer transition-colors"
+                      onClick={() => onViewSong(song)}
+                    >
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-3">
+                          <div className="bg-primary/10 text-primary flex items-center justify-center rounded-md w-10 h-10 flex-shrink-0">
+                            <Music className="w-5 h-5" />
+                          </div>
+                          <div className="min-w-0">
+                            <h3 className="font-medium text-foreground truncate">{song.title}</h3>
+                            <p className="text-sm text-muted-foreground truncate">{song.artist}</p>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <div className="flex items-center gap-3">
+                        <div className="flex flex-wrap gap-1 max-w-[200px]">
+                          <Badge variant="secondary" className="bg-secondary text-secondary-foreground text-xs">
+                            {song.key}
+                          </Badge>
+                          {song.tags.slice(0, 2).map((tag) => (
+                            <Badge key={tag} variant="outline" className="border-border text-muted-foreground text-xs">
+                              {tag}
+                            </Badge>
+                          ))}
+                          {song.tags.length > 2 && (
+                            <Badge variant="outline" className="border-border text-muted-foreground text-xs">
+                              +{song.tags.length - 2}
+                            </Badge>
+                          )}
+                        </div>
+                        
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className={cn(
+                            "h-8 w-8",
+                            song.isFavorite ? "text-primary hover:text-primary/80" : "text-muted-foreground hover:text-primary"
+                          )}
+                          onClick={(e) => {
+                            e.stopPropagation()
+                            onToggleFavorite(song.id)
+                          }}
+                        >
+                          <Heart className={cn("w-4 h-4", song.isFavorite && "fill-current")} />
+                        </Button>
+                      </div>
+                    </div>
+                  </ContextMenuTrigger>
+                  
+                  <ContextMenuContent className="bg-card border-border">
+                    <ContextMenuItem onClick={() => onViewSong(song)}>
+                      View Details
+                    </ContextMenuItem>
+                    <ContextMenuItem onClick={() => onToggleFavorite(song.id)}>
+                      {song.isFavorite ? "Remove from Favorites" : "Add to Favorites"}
+                    </ContextMenuItem>
+                    <ContextMenuItem onClick={() => {
+                      if (confirm("Are you sure you want to delete this song?")) {
+                        onDeleteSong(song.id)
+                      }
+                    }} className="text-destructive focus:text-destructive">
+                      Delete Song
+                    </ContextMenuItem>
+                  </ContextMenuContent>
+                </ContextMenu>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
       )}
     </div>
-  )
-}
-
-function Music({ className }: { className?: string }) {
-  return (
-    <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3" />
-    </svg>
   )
 }
