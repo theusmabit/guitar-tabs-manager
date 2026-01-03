@@ -446,7 +446,10 @@ function renderLyricsWithChords(content: string) {
         parts.push(line.slice(lastIndex, match.index))
       }
       parts.push(
-        <span key={`${lineIndex}-${match.index}`} className="text-primary font-bold">
+        <span
+          key={`${lineIndex}-${match.index}`}
+          className="bg-primary/10 text-primary font-bold px-1 py-0.5 rounded-sm inline-block my-0.5"
+        >
           {match[0]}
         </span>,
       )
@@ -458,7 +461,7 @@ function renderLyricsWithChords(content: string) {
     }
 
     return (
-      <span key={lineIndex}>
+      <span key={lineIndex} className="block min-h-[1.5em]">
         {parts.length > 0 ? parts : line}
         {"\n"}
       </span>
