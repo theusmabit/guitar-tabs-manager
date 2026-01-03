@@ -30,12 +30,7 @@ export function TopBar({ onSearch, onNavigateHome }: TopBarProps) {
       <div className="flex items-center gap-2 flex-1">
         <SidebarTrigger className="-ml-1" />
         <div className="h-4 w-px bg-border mx-2 hidden md:block" />
-        <button onClick={onNavigateHome} className="flex items-center gap-2 hover:opacity-80 transition-opacity">
-          <span className="font-semibold text-foreground hidden sm:inline">
-            Chord<span className="text-primary">Master</span>
-          </span>
-        </button>
-
+        
         {/* Center: Search Bar */}
         <form onSubmit={handleSearch} className="flex-1 max-w-md mx-4 hidden md:block">
           <div className="relative">
