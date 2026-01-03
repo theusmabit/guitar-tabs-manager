@@ -2,7 +2,7 @@
 
 import type React from "react"
 import { useState } from "react"
-import { Music, Search, User, Bell, Upload } from "lucide-react"
+import { Music, Search, User, Bell, Upload, Palette } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
@@ -53,6 +53,25 @@ export function TopBar({ onSearch, onNavigateHome }: TopBarProps) {
             <Upload className="w-4 h-4 mr-2" />
             Upload Chord
           </Button>
+
+          {/* Appearance */}
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="text-muted-foreground hover:text-foreground hover:bg-accent"
+                title="Appearance"
+              >
+                <Palette className="w-5 h-5" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="bg-card border-border">
+              <DropdownMenuItem className="text-foreground hover:bg-accent cursor-pointer">Light</DropdownMenuItem>
+              <DropdownMenuItem className="text-foreground hover:bg-accent cursor-pointer">Dark</DropdownMenuItem>
+              <DropdownMenuItem className="text-foreground hover:bg-accent cursor-pointer">System</DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
 
           {/* Notifications */}
           <Button
