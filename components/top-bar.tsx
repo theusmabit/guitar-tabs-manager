@@ -6,6 +6,7 @@ import { Music, Search, User, Bell, Upload, Palette } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
+import { useTheme } from "next-themes"
 
 interface TopBarProps {
   onSearch?: (query: string) => void
@@ -14,6 +15,7 @@ interface TopBarProps {
 
 export function TopBar({ onSearch, onNavigateHome }: TopBarProps) {
   const [searchQuery, setSearchQuery] = useState("")
+  const { setTheme } = useTheme()
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault()
@@ -67,9 +69,15 @@ export function TopBar({ onSearch, onNavigateHome }: TopBarProps) {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="bg-card border-border">
-              <DropdownMenuItem className="text-foreground hover:bg-accent cursor-pointer">Light</DropdownMenuItem>
-              <DropdownMenuItem className="text-foreground hover:bg-accent cursor-pointer">Dark</DropdownMenuItem>
-              <DropdownMenuItem className="text-foreground hover:bg-accent cursor-pointer">System</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setTheme("light")} className="text-foreground hover:bg-accent cursor-pointer">
+                Light
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setTheme("dark")} className="text-foreground hover:bg-accent cursor-pointer">
+                Dark
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setTheme("system")} className="text-foreground hover:bg-accent cursor-pointer">
+                System
+              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
 
