@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useRef, useEffect } from "react"
-import { Volume2, Play, Pause, Music } from "lucide-react"
+import { Volume2, Play, Pause, Music, SkipBack, SkipForward } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Slider } from "@/components/ui/slider"
 import { Card, CardContent } from "@/components/ui/card"
@@ -54,6 +54,11 @@ export function MusicPlayer({ song, audioUrl }: MusicPlayerProps) {
     setIsPlaying(!isPlaying)
   }
 
+  const handleSkip = (seconds: number) => {
+    if (!audioRef.current) return
+    audioRef.current.currentTime = Math.max(0, Math.min(duration, audioRef.current.currentTime + seconds))
+  }
+
   const handleSeek = (value: number[]) => {
     if (!audioRef.current) return
     audioRef.current.currentTime = value[0]
@@ -85,19 +90,41 @@ export function MusicPlayer({ song, audioUrl }: MusicPlayerProps) {
           </div>
         </div>
 
-        {/* Minimal Controls */}
-        <div className="flex items-center gap-4">
-          <Button
-            variant="default"
-            size="icon"
-            className="h-8 w-8 rounded-full shrink-0"
-            onClick={togglePlay}
-            disabled={!audioUrl && true}
-          >
-            {isPlaying ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4 ml-0.5" />}
-          </Button>
+        {/* Controls */}
+        <div className="flex flex-col gap-4">
+          <div className="flex items-center justify-center gap-2">
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-8 w-8 rounded-full"
+              onClick={() => handleSkip(-5)}
+              disabled={!audioUrl && true}
+            >
+              <SkipBack className="w-4 h-4" />
+            </Button>
+            
+            <Button
+              variant="default"
+              size="icon"
+              className="h-10 w-10 rounded-full shrink-0"
+              onClick={togglePlay}
+              disabled={!audioUrl && true}
+            >
+              {isPlaying ? <Pause className="w-5 h-5" /> : <Play className="w-5 h-5 ml-0.5" />}
+            </Button>
 
-          <div className="flex items-center gap-2 flex-1">
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-8 w-8 rounded-full"
+              onClick={() => handleSkip(5)}
+              disabled={!audioUrl && true}
+            >
+              <SkipForward className="w-4 h-4" />
+            </Button>
+          </div>
+
+          <div className="flex items-center gap-2">
             <Volume2 className="w-3.5 h-3.5 text-muted-foreground shrink-0" />
             <Slider
               value={[volume]}
