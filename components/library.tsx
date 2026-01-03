@@ -53,9 +53,9 @@ export function Library({
   const [newFolderName, setNewFolderName] = useState("")
   const [isCreatingFolder, setIsCreatingFolder] = useState(false)
   const [filters, setFilters] = useState({
-    genre: "",
-    artist: "",
-    key: "",
+    genre: "all",
+    artist: "all",
+    key: "all",
   })
 
   // Extrair opções únicas para os filtros
@@ -87,15 +87,15 @@ export function Library({
         song.artist.toLowerCase().includes(searchQuery.toLowerCase())
       
       const matchesGenre = 
-        filters.genre === "" || 
+        filters.genre === "all" || 
         song.tags.includes(filters.genre)
       
       const matchesArtist = 
-        filters.artist === "" || 
+        filters.artist === "all" || 
         song.artist === filters.artist
       
       const matchesKey = 
-        filters.key === "" || 
+        filters.key === "all" || 
         song.key === filters.key
       
       return matchesSearch && matchesGenre && matchesArtist && matchesKey
@@ -112,9 +112,9 @@ export function Library({
 
   const clearFilters = () => {
     setFilters({
-      genre: "",
-      artist: "",
-      key: "",
+      genre: "all",
+      artist: "all",
+      key: "all",
     })
     setSearchQuery("")
   }
@@ -225,7 +225,7 @@ export function Library({
                 <SelectValue placeholder="All genres" />
               </SelectTrigger>
               <SelectContent className="bg-card border-border">
-                <SelectItem value="">All genres</SelectItem>
+                <SelectItem value="all">All genres</SelectItem>
                 {uniqueGenres.map((genre) => (
                   <SelectItem key={genre} value={genre}>{genre}</SelectItem>
                 ))}
@@ -240,7 +240,7 @@ export function Library({
                 <SelectValue placeholder="All artists" />
               </SelectTrigger>
               <SelectContent className="bg-card border-border">
-                <SelectItem value="">All artists</SelectItem>
+                <SelectItem value="all">All artists</SelectItem>
                 {uniqueArtists.map((artist) => (
                   <SelectItem key={artist} value={artist}>{artist}</SelectItem>
                 ))}
@@ -255,7 +255,7 @@ export function Library({
                 <SelectValue placeholder="All keys" />
               </SelectTrigger>
               <SelectContent className="bg-card border-border">
-                <SelectItem value="">All keys</SelectItem>
+                <SelectItem value="all">All keys</SelectItem>
                 {uniqueKeys.map((key) => (
                   <SelectItem key={key} value={key}>{key}</SelectItem>
                 ))}
