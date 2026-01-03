@@ -1,7 +1,7 @@
 "use client"
 
 import * as React from "react"
-import { Home, Music, Heart, Folder, Plus, Settings, LogOut, ChevronDown, HelpCircle, User } from "lucide-react"
+import { Home, Music, Heart, Folder, Plus, Settings, LogOut, ChevronDown, HelpCircle, User } from "lachide-react"
 import { useTheme } from "next-themes"
 import { Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarRail, SidebarFooter, useSidebar, } from "@/components/ui/sidebar"
 import { Button } from "@/components/ui/button"
