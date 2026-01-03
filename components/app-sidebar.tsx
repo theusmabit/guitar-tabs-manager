@@ -49,14 +49,15 @@ export function AppSidebar({ currentView, onNavigate, ...props }: AppSidebarProp
 
   return (
     <Sidebar collapsible="icon" {...props}>
-      <SidebarHeader className="border-b border-sidebar-border h-16 flex items-center px-4">
+      <SidebarHeader className="border-b border-sidebar-border h-16 flex items-center px-4 group-data-[collapsible=icon]:px-2">
         {/* Logo ChordMaster */}
-        <div className="flex items-center gap-2 font-bold text-primary">
+        <div className="flex items-center gap-2 font-bold text-primary group-data-[collapsible=icon]:hidden">
           <Music className="size-6" />
-          <span className="group-data-[collapsible=icon]:hidden">ChordMaster</span>
+          <span>ChordMaster</span>
         </div>
-        {/* Botão de Colapso (lado oposto) */}
-        <div className="ml-auto group-data-[collapsible=icon]:hidden">
+        
+        {/* Botão de Colapso/Expansão */}
+        <div className="ml-auto group-data-[collapsible=icon]:ml-0 group-data-[collapsible=icon]:w-full">
           <SidebarCollapseButton />
         </div>
       </SidebarHeader>
