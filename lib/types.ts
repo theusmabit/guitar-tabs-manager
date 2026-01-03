@@ -6,6 +6,7 @@ export interface Song {
   key: string
   isFavorite: boolean
   tags: string[]
+  createdAt: string // ISO date string
 }
 
 export interface Folder {

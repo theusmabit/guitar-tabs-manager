@@ -36,6 +36,7 @@ export function AddSong({ onAddSong, onImportSongs }: AddSongProps) {
       key: form.key,
       content: form.content,
       isFavorite: false,
+      createdAt: new Date().toISOString(),
       tags: form.tags
         .split(",")
         .map((t) => t.trim())
@@ -57,8 +58,9 @@ export function AddSong({ onAddSong, onImportSongs }: AddSongProps) {
     try {
       const parsed = JSON.parse(jsonImport)
       const songs: Song[] = Array.isArray(parsed) ? parsed : [parsed]
+      const now = new Date().toISOString()
 
-      // Validate and add IDs if missing
+      // Validate and add IDs/Dates if missing
       const validatedSongs = songs.map((song) => ({
         id: song.id || crypto.randomUUID(),
         title: song.title || "Untitled",
@@ -66,6 +68,7 @@ export function AddSong({ onAddSong, onImportSongs }: AddSongProps) {
         key: song.key || "C",
         content: song.content || "",
         isFavorite: song.isFavorite || false,
+        createdAt: song.createdAt || now,
         tags: song.tags || [],
       }))
 
@@ -79,13 +82,14 @@ export function AddSong({ onAddSong, onImportSongs }: AddSongProps) {
 
   const handleFileImport = (file: File) => {
     const reader = new FileReader()
+    const now = new Date().toISOString()
     reader.onload = (e) => {
       try {
         const content = e.target?.result as string
         const parsed = JSON.parse(content)
         const songs: Song[] = Array.isArray(parsed) ? parsed : [parsed]
 
-        // Validate and add IDs if missing
+        // Validate and add IDs/Dates if missing
         const validatedSongs = songs.map((song) => ({
           id: song.id || crypto.randomUUID(),
           title: song.title || "Untitled",
@@ -93,6 +97,7 @@ export function AddSong({ onAddSong, onImportSongs }: AddSongProps) {
           key: song.key || "C",
           content: song.content || "",
           isFavorite: song.isFavorite || false,
+          createdAt: song.createdAt || now,
           tags: song.tags || [],
         }))
 

@@ -42,6 +42,7 @@ export function loadFolders(): Folder[] {
 }
 
 export function getMockSongs(): Song[] {
+  const now = new Date().toISOString()
   return [
     {
       id: "1",
@@ -50,6 +51,7 @@ export function getMockSongs(): Song[] {
       key: "D",
       isFavorite: false,
       tags: ["Rock", "Classic"],
+      createdAt: now,
       content: `       D                G
 Nas favelas, no senado
 D                      G
@@ -89,6 +91,7 @@ Que país é este?`,
       key: "Bm",
       isFavorite: true,
       tags: ["Rock", "Epic"],
+      createdAt: now,
       content: `Bm                        A
 Não tinha medo o tal João de Santo Cristo
 Bm                           A
@@ -114,6 +117,7 @@ Mas inconformado com a maldade e a opressão`,
       key: "Am",
       isFavorite: false,
       tags: ["MPB", "Forró"],
+      createdAt: now,
       content: `      Am
 Tu vens, tu vens
       Dm
@@ -144,6 +148,7 @@ Eu já escuto os teus sinais`,
       key: "G",
       isFavorite: true,
       tags: ["Rock", "Romance"],
+      createdAt: now,
       content: `G                    Em
 Quem um dia irá dizer
               C                D
@@ -178,6 +183,7 @@ Foi um carinha do cursinho do Eduardo que disse
       key: "E",
       isFavorite: false,
       tags: ["Rock", "Classic"],
+      createdAt: now,
       content: `E                           B
 Todos os dias quando acordo
 A                        E

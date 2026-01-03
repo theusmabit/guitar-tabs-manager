@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useMemo } from "react"
-import { Search, Heart, Trash2, Plus, FolderPlus, X, Filter, List, Grid3X3, Music } from "lucide-react"
+import { Search, Heart, Trash2, Plus, FolderPlus, X, Filter, List, Grid3X3, Music, ArrowUpDown } from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
@@ -16,6 +16,13 @@ import {
   ContextMenuItem, 
   ContextMenuTrigger 
 } from "@/components/ui/context-menu"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 
 interface LibraryProps {
   songs: Song[]
@@ -32,6 +39,8 @@ interface LibraryProps {
   showFolderManager?: boolean
   title: string
 }
+
+type SortOption = "title-asc" | "title-desc" | "artist-asc" | "artist-desc" | "newest" | "oldest"
 
 export function Library({
   songs,
@@ -51,6 +60,7 @@ export function Library({
   const [searchQuery, setSearchQuery] = useState("")
   const [newFolderName, setNewFolderName] = useState("")
   const [isCreatingFolder, setIsCreatingFolder] = useState(false)
+  const [sortOrder, setSortOrder] = useState<SortOption>("newest")
   const [filters, setFilters] = useState({
     genre: "",
     artist: "",
@@ -107,8 +117,8 @@ export function Library({
     }
   }
 
-  const filteredSongs = useMemo(() => {
-    return songs.filter((song) => {
+  const processedSongs = useMemo(() => {
+    let result = songs.filter((song) => {
       const matchesSearch = 
         searchQuery === "" || 
         song.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
@@ -128,7 +138,20 @@ export function Library({
       
       return matchesSearch && matchesGenre && matchesArtist && matchesKey
     })
-  }, [songs, searchQuery, filters])
+
+    // Ordenação
+    return result.sort((a, b) => {
+      switch (sortOrder) {
+        case "title-asc": return a.title.localeCompare(b.title)
+        case "title-desc": return b.title.localeCompare(a.title)
+        case "artist-asc": return a.artist.localeCompare(b.artist)
+        case "artist-desc": return b.artist.localeCompare(a.artist)
+        case "newest": return new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime()
+        case "oldest": return new Date(a.createdAt || 0).getTime() - new Date(b.createdAt || 0).getTime()
+        default: return 0
+      }
+    })
+  }, [songs, searchQuery, filters, sortOrder])
 
   const handleCreateFolder = () => {
     if (newFolderName.trim() && onAddFolder) {
@@ -145,6 +168,7 @@ export function Library({
       key: "",
     })
     setSearchQuery("")
+    setSortOrder("newest")
   }
 
   const handleGenreSelect = (genre: string) => {
@@ -244,7 +268,24 @@ export function Library({
             />
           </div>
           
-          <div className="flex gap-2">
+          <div className="flex gap-2 items-center flex-wrap">
+            <div className="flex items-center gap-2">
+              <ArrowUpDown className="w-4 h-4 text-muted-foreground" />
+              <Select value={sortOrder} onValueChange={(v: SortOption) => setSortOrder(v)}>
+                <SelectTrigger className="w-[180px] bg-secondary border-border h-9 text-xs">
+                  <SelectValue placeholder="Sort by" />
+                </SelectTrigger>
+                <SelectContent className="bg-card border-border">
+                  <SelectItem value="newest">Mais recentes</SelectItem>
+                  <SelectItem value="oldest">Mais antigos</SelectItem>
+                  <SelectItem value="title-asc">Título (A-Z)</SelectItem>
+                  <SelectItem value="title-desc">Título (Z-A)</SelectItem>
+                  <SelectItem value="artist-asc">Artista (A-Z)</SelectItem>
+                  <SelectItem value="artist-desc">Artista (Z-A)</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
             <Button 
               variant="outline" 
               size="sm"
@@ -252,7 +293,7 @@ export function Library({
               className="border-border text-muted-foreground hover:bg-accent"
             >
               <Filter className="w-4 h-4 mr-2" />
-              Clear Filters
+              Reset
             </Button>
             
             <Button 
@@ -362,16 +403,16 @@ export function Library({
         </div>
       </div>
 
-      {filteredSongs.length === 0 ? (
+      {processedSongs.length === 0 ? (
         <div className="text-center py-12 text-muted-foreground">
           <Music className="w-16 h-16 mx-auto mb-4 opacity-50" />
           <p className="text-lg">No songs found</p>
           <p className="text-sm">Try adjusting your search or filters</p>
         </div>
       ) : viewMode === "grid" ? (
-        // Grid View (modo atual)
+        // Grid View
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {filteredSongs.map((song) => (
+          {processedSongs.map((song) => (
             <Card
               key={song.id}
               className="bg-card border-border hover:border-primary/50 transition-colors cursor-pointer group"
@@ -476,11 +517,11 @@ export function Library({
           ))}
         </div>
       ) : (
-        // List View (novo modo)
+        // List View
         <Card className="bg-card border-border">
           <CardContent className="p-0">
             <div className="divide-y divide-border">
-              {filteredSongs.map((song) => (
+              {processedSongs.map((song) => (
                 <ContextMenu key={song.id}>
                   <ContextMenuTrigger>
                     <div 
