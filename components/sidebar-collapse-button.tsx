@@ -1,6 +1,6 @@
 "use client"
 
-import { ChevronDown } from "lucide-react"
+import { PanelLeft, PanelLeftOpen } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { useSidebar } from "@/components/ui/sidebar"
 import { cn } from "@/lib/utils"
@@ -19,7 +19,11 @@ export function SidebarCollapseButton() {
       className="text-muted-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
       aria-label={isCollapsed ? "Expandir Sidebar" : "Minimizar Sidebar"}
     >
-      <ChevronDown className={cn("size-4 transition-transform", isCollapsed ? "rotate-90" : "-rotate-90")} />
+      {isCollapsed ? (
+        <PanelLeftOpen className="size-4" />
+      ) : (
+        <PanelLeft className="size-4" />
+      )}
     </Button>
   )
 }
