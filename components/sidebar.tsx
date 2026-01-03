@@ -20,7 +20,6 @@ export function Sidebar({ currentView, onNavigate }: SidebarProps) {
     { id: "favorites", label: "Favorites", icon: Heart },
     { id: "folders", label: "Folders", icon: Folder },
     { id: "add", label: "Add Song", icon: Plus },
-    { id: "settings", label: "Settings", icon: Settings },
   ]
 
   return (
@@ -67,44 +66,61 @@ export function Sidebar({ currentView, onNavigate }: SidebarProps) {
         })}
       </nav>
 
-      <div className="p-4 border-t border-border mt-auto space-y-2">
-        {/* Theme and Language on the bottom menu */}
-        <div className={cn("flex items-center gap-1", isCollapsed ? "flex-col" : "justify-between")}>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="text-muted-foreground hover:text-foreground hover:bg-accent h-9 w-9"
-                title="Appearance"
-              >
-                <Palette className="w-4 h-4" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent side="right" align="end" className="bg-card border-border">
-              <DropdownMenuItem className="text-foreground hover:bg-accent cursor-pointer">Light</DropdownMenuItem>
-              <DropdownMenuItem className="text-foreground hover:bg-accent cursor-pointer">Dark</DropdownMenuItem>
-              <DropdownMenuItem className="text-foreground hover:bg-accent cursor-pointer">System</DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+      <div className="p-4 border-t border-border mt-auto space-y-4">
+        {/* Settings Button */}
+        <Button
+          variant="ghost"
+          className={cn(
+            "w-full gap-3 text-muted-foreground hover:text-foreground hover:bg-accent",
+            isCollapsed ? "justify-center px-0" : "justify-start",
+            currentView === "settings" && "bg-primary/10 text-primary hover:text-primary hover:bg-primary/20",
+          )}
+          onClick={() => onNavigate("settings")}
+          title={isCollapsed ? "Settings" : undefined}
+        >
+          <Settings className="w-5 h-5" />
+          {!isCollapsed && "Settings"}
+        </Button>
 
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="text-muted-foreground hover:text-foreground hover:bg-accent h-9 w-9"
-                title="Language"
-              >
-                <Languages className="w-4 h-4" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent side="right" align="end" className="bg-card border-border">
-              <DropdownMenuItem className="text-foreground hover:bg-accent cursor-pointer">English</DropdownMenuItem>
-              <DropdownMenuItem className="text-foreground hover:bg-accent cursor-pointer">Português</DropdownMenuItem>
-              <DropdownMenuItem className="text-foreground hover:bg-accent cursor-pointer">Español</DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+        {/* Theme and Language bottom container */}
+        <div className={cn("flex items-center gap-1 pt-2 border-t border-border/50", isCollapsed ? "flex-col" : "justify-between")}>
+          <div className="flex items-center gap-1">
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="text-muted-foreground hover:text-foreground hover:bg-accent h-9 w-9"
+                  title="Appearance"
+                >
+                  <Palette className="w-4 h-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent side="right" align="end" className="bg-card border-border">
+                <DropdownMenuItem className="text-foreground hover:bg-accent cursor-pointer">Light</DropdownMenuItem>
+                <DropdownMenuItem className="text-foreground hover:bg-accent cursor-pointer">Dark</DropdownMenuItem>
+                <DropdownMenuItem className="text-foreground hover:bg-accent cursor-pointer">System</DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="text-muted-foreground hover:text-foreground hover:bg-accent h-9 w-9"
+                  title="Language"
+                >
+                  <Languages className="w-4 h-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent side="right" align="end" className="bg-card border-border">
+                <DropdownMenuItem className="text-foreground hover:bg-accent cursor-pointer">English</DropdownMenuItem>
+                <DropdownMenuItem className="text-foreground hover:bg-accent cursor-pointer">Português</DropdownMenuItem>
+                <DropdownMenuItem className="text-foreground hover:bg-accent cursor-pointer">Español</DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
 
           <Button
             variant="ghost"
