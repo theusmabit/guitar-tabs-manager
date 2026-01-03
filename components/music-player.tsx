@@ -4,7 +4,7 @@ import { useState, useRef, useEffect } from "react"
 import { Volume2, Play, Pause, Music } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Slider } from "@/components/ui/slider"
-import { Card, CardContent, CardHeader } from "@/components/ui/card"
+import { Card, CardContent } from "@/components/ui/card"
 import type { Song } from "@/lib/types"
 
 interface MusicPlayerProps {
@@ -68,14 +68,8 @@ export function MusicPlayer({ song, audioUrl }: MusicPlayerProps) {
 
   return (
     <Card className="rounded-sm border-border shadow-none bg-card">
-      <CardHeader className="pb-3 pt-4">
-        <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground flex items-center gap-2">
-          <Music className="w-3 h-3" />
-          Backing Track
-        </h3>
-      </CardHeader>
       <audio ref={audioRef} src={audioUrl || `/placeholder-audio.mp3`} />
-      <CardContent className="p-4 pt-0 space-y-3">
+      <CardContent className="p-4 space-y-3">
         {/* Progress and Time */}
         <div className="space-y-1">
           <Slider

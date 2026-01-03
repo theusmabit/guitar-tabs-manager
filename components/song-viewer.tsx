@@ -13,10 +13,9 @@ import {
   Columns2,
   Minus,
   Type,
-  Zap,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader } from "@/components/ui/card"
+import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import type { Song } from "@/lib/types"
@@ -201,10 +200,7 @@ export function SongViewer({ song, onUpdateSong, onBack }: SongViewerProps) {
                   <MusicPlayer song={song} />
 
                   <Card className="rounded-sm border-border shadow-none">
-                    <CardHeader className="pb-3 pt-4">
-                      <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Song Controls</h3>
-                    </CardHeader>
-                    <CardContent className="space-y-6">
+                    <CardContent className="p-4 space-y-6">
                       {/* Transpose Control */}
                       <div className="space-y-2">
                         <label className="text-[10px] uppercase font-bold text-muted-foreground tracking-tight">Transpose</label>
@@ -315,12 +311,6 @@ export function SongViewer({ song, onUpdateSong, onBack }: SongViewerProps) {
                   </Card>
 
                   <Card className="rounded-sm border-border shadow-none">
-                    <CardHeader className="pb-3 pt-4">
-                      <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground flex items-center gap-2">
-                        <Zap className="w-3 h-3" />
-                        Practice Tools
-                      </h3>
-                    </CardHeader>
                     <Tabs defaultValue="tuner" className="w-full">
                       <TabsList className="w-full grid grid-cols-2 rounded-sm h-9 px-4 bg-transparent">
                         <TabsTrigger value="tuner" className="rounded-sm text-xs">
