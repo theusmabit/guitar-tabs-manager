@@ -24,7 +24,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 
 const navigationItems = [
   { id: "home", title: "Início", icon: Home },
-  { id: "library", title: "Biblioteca", icon: Music },
+  { id: "library", title: "Biblioteca", "icon": Music },
   { id: "favorites", title: "Favoritos", icon: Heart },
   { id: "folders", title: "Pastas", icon: Folder },
   { id: "add", title: "Adicionar Música", icon: Plus },
@@ -60,8 +60,8 @@ export function AppSidebar({ currentView, onNavigate, ...props }: AppSidebarProp
         </div>
       </SidebarHeader>
       
-      <SidebarContent>
-        {/* Grupo 1: Navegação Principal */}
+      <SidebarContent className="justify-between"> {/* Adicionado justify-between para empurrar o último grupo para baixo */}
+        {/* Grupo 1: Navegação Principal (Topo) */}
         <SidebarGroup>
           <SidebarGroupLabel>Navegação</SidebarGroupLabel>
           <SidebarGroupContent>
@@ -82,60 +82,63 @@ export function AppSidebar({ currentView, onNavigate, ...props }: AppSidebarProp
           </SidebarGroupContent>
         </SidebarGroup>
 
-        {/* Grupo 2: Ferramentas e Utilidades */}
-        <SidebarGroup>
-          <SidebarGroupLabel>Ferramentas</SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              <SidebarMenuItem>
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <SidebarMenuButton tooltip="Tema">
-                      <Palette />
-                      <span>Tema</span>
-                      <ChevronDown className="size-4 ml-auto group-data-[collapsible=icon]:hidden" />
-                    </SidebarMenuButton>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="start" side="right" sideOffset={isCollapsed ? 12 : 0}>
-                    <DropdownMenuItem onClick={() => setTheme("light")}>Claro</DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => setTheme("dark")}>Escuro</DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => setTheme("system")}>Sistema</DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              </SidebarMenuItem>
-              <SidebarMenuItem>
-                <SidebarMenuButton tooltip="Ajuda">
-                  <HelpCircle />
-                  <span>Ajuda</span>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
+        {/* Container para os grupos inferiores */}
+        <div className="mt-auto flex flex-col gap-2">
+          {/* Grupo 2: Ferramentas e Utilidades (Base) */}
+          <SidebarGroup>
+            <SidebarGroupLabel>Ferramentas</SidebarGroupLabel>
+            <SidebarGroupContent>
+              <SidebarMenu>
+                <SidebarMenuItem>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <SidebarMenuButton tooltip="Tema">
+                        <Palette />
+                        <span>Tema</span>
+                        <ChevronDown className="size-4 ml-auto group-data-[collapsible=icon]:hidden" />
+                      </SidebarMenuButton>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="start" side="right" sideOffset={isCollapsed ? 12 : 0}>
+                      <DropdownMenuItem onClick={() => setTheme("light")}>Claro</DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => setTheme("dark")}>Escuro</DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => setTheme("system")}>Sistema</DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </SidebarMenuItem>
+                <SidebarMenuItem>
+                  <SidebarMenuButton tooltip="Ajuda">
+                    <HelpCircle />
+                    <span>Ajuda</span>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
 
-        {/* Grupo 3: Configurações */}
-        <SidebarGroup>
-          <SidebarGroupLabel>Configurações</SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              <SidebarMenuItem>
-                <SidebarMenuButton
-                  onClick={() => onNavigate("settings")}
-                  isActive={currentView === "settings"}
-                  tooltip="Configurações"
-                >
-                  <Settings />
-                  <span>Configurações</span>
-                  <ChevronDown className="size-4 ml-auto group-data-[collapsible=icon]:hidden" />
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
+          {/* Grupo 3: Configurações (Base) */}
+          <SidebarGroup>
+            <SidebarGroupLabel>Configurações</SidebarGroupLabel>
+            <SidebarGroupContent>
+              <SidebarMenu>
+                <SidebarMenuItem>
+                  <SidebarMenuButton
+                    onClick={() => onNavigate("settings")}
+                    isActive={currentView === "settings"}
+                    tooltip="Configurações"
+                  >
+                    <Settings />
+                    <span>Configurações</span>
+                    <ChevronDown className="size-4 ml-auto group-data-[collapsible=icon]:hidden" />
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
+        </div>
       </SidebarContent>
 
       <SidebarFooter className="border-t border-sidebar-border p-2">
-        {/* User Profile Row - Simplified */}
+        {/* User Profile Row */}
         <div className="flex items-center gap-2 p-2 rounded-md hover:bg-sidebar-accent">
           <Avatar className="size-8 shrink-0">
             <AvatarFallback className="bg-primary text-primary-foreground text-xs">
