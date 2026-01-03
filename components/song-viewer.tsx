@@ -314,10 +314,14 @@ export function SongViewer({ song, onUpdateSong, onBack }: SongViewerProps) {
                         </TabsTrigger>
                       </TabsList>
                       <TabsContent value="tuner" className="mt-0">
-                        <Tuner />
+                        <CardContent className="pt-4">
+                          <Tuner />
+                        </CardContent>
                       </TabsContent>
                       <TabsContent value="metronome" className="mt-0">
-                        <Metronome />
+                        <CardContent className="pt-4">
+                          <Metronome />
+                        </CardContent>
                       </TabsContent>
                     </Tabs>
                   </Card>
