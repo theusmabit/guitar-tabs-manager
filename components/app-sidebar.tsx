@@ -85,7 +85,7 @@ export function AppSidebar({ currentView, onNavigate, ...props }: AppSidebarProp
           <DropdownMenuTrigger asChild>
             {/* User Profile Row - Agora é o Trigger */}
             <div 
-              className="flex items-center gap-2 p-2 hover:bg-sidebar-accent cursor-pointer transition-colors group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:p-3 group-data-[collapsible=icon]:h-12 group-data-[collapsible=icon]:w-full rounded-md"
+              className="flex items-center gap-2 p-2 hover:bg-sidebar-accent cursor-pointer transition-colors group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:p-3 group-data-[collapsible=icon]:h-12 group-data-[collapsible=icon]:w-full group-data-[collapsible=icon]:rounded-none rounded-md"
               role="button"
               tabIndex={0}
             >
