@@ -79,8 +79,8 @@ export function AppSidebar({ currentView, onNavigate, ...props }: AppSidebarProp
 
       <SidebarFooter className="border-t border-sidebar-border p-2 space-y-2">
         {/* Utility Row (Settings, Theme, Toggle) */}
-        <div className="flex items-center justify-between">
-          <SidebarMenu className="flex-row flex-1">
+        <div className="flex items-end justify-between">
+          <SidebarMenu className="flex-col flex-1"> {/* Alterado para flex-col */}
             <SidebarMenuItem>
               <SidebarMenuButton
                 onClick={() => onNavigate("settings")}
