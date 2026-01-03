@@ -6,10 +6,13 @@ import {
   ChevronLeft,
   ChevronRight,
   Play,
+  Pause,
   Heart,
   Plus,
   ChevronDown,
   Columns2,
+  Minus,
+  Type,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
@@ -24,6 +27,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 
 interface SongViewerProps {
   song: Song
@@ -51,7 +55,6 @@ export function SongViewer({ song, onUpdateSong, onBack }: SongViewerProps) {
   })
 
   const transposedContent = transposeContent(song.content, transpose)
-  const transposedKey = transposeChord(song.key, transpose)
 
   const uniqueChords = extractUniqueChords(transposedContent)
 
@@ -197,108 +200,115 @@ export function SongViewer({ song, onUpdateSong, onBack }: SongViewerProps) {
                   <MusicPlayer song={song} />
 
                   <Card className="rounded-sm border-border shadow-none">
-                    <CardHeader className="pb-3">
-                      <h3 className="text-sm font-semibold text-foreground">Song Controls</h3>
+                    <CardHeader className="pb-3 pt-4">
+                      <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Song Controls</h3>
                     </CardHeader>
-                    <CardContent className="space-y-4">
+                    <CardContent className="space-y-6">
                       {/* Transpose Control */}
                       <div className="space-y-2">
-                        <label className="text-sm text-muted-foreground">Transpose</label>
-                        <div className="flex items-center gap-1 bg-card border border-border rounded-sm">
+                        <label className="text-[10px] uppercase font-bold text-muted-foreground tracking-tight">Transpose</label>
+                        <div className="flex items-center gap-1 bg-secondary/50 p-1 rounded-sm border border-border">
                           <Button
                             variant="ghost"
                             size="sm"
                             onClick={() => setTranspose((t) => t - 1)}
-                            className="h-9 w-9 p-0 rounded-sm hover:bg-accent"
+                            className="h-8 w-8 p-0 rounded-sm hover:bg-background"
                           >
-                            −
+                            <Minus className="w-3 h-3" />
                           </Button>
-                          <span className="text-sm font-medium min-w-[70px] text-center px-2">
+                          <span className="text-xs font-bold flex-1 text-center">
                             {transpose === 0 ? "Original" : transpose > 0 ? `+${transpose}` : transpose}
                           </span>
                           <Button
                             variant="ghost"
                             size="sm"
                             onClick={() => setTranspose((t) => t + 1)}
-                            className="h-9 w-9 p-0 rounded-sm hover:bg-accent"
+                            className="h-8 w-8 p-0 rounded-sm hover:bg-background"
                           >
-                            +
+                            <Plus className="w-3 h-3" />
                           </Button>
                         </div>
                       </div>
 
-                      {/* Auto-scroll Control */}
-                      <div className="space-y-2">
-                        <label className="text-sm text-muted-foreground">Auto-scroll</label>
-                        <Button
-                          variant={autoScroll ? "default" : "outline"}
-                          size="sm"
-                          onClick={() => setAutoScroll(!autoScroll)}
-                          className="w-full rounded-sm h-9"
-                        >
-                          <Play className="w-3.5 h-3.5 mr-1.5" />
-                          {autoScroll ? "Stop Scrolling" : "Start Scrolling"}
-                        </Button>
-                        {autoScroll && (
-                          <div className="space-y-1">
-                            <label className="text-xs text-muted-foreground">Speed: {scrollSpeed} BPM</label>
-                            <input
-                              type="range"
-                              min="30"
-                              max="180"
-                              value={scrollSpeed}
-                              onChange={(e) => setScrollSpeed(Number(e.target.value))}
-                              className="w-full"
-                            />
+                      {/* Tool Grid */}
+                      <div className="grid grid-cols-2 gap-2">
+                        {/* Auto-scroll */}
+                        <div className="space-y-2">
+                          <label className="text-[10px] uppercase font-bold text-muted-foreground tracking-tight">Auto-scroll</label>
+                          <div className="flex gap-1">
+                            <Button
+                              variant={autoScroll ? "default" : "outline"}
+                              size="sm"
+                              onClick={() => setAutoScroll(!autoScroll)}
+                              className="flex-1 rounded-sm h-10 px-0"
+                            >
+                              {autoScroll ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
+                            </Button>
+                            <Popover>
+                              <PopoverTrigger asChild>
+                                <Button variant="outline" size="sm" className="h-10 w-10 p-0 rounded-sm">
+                                  <ChevronDown className="w-3 h-3" />
+                                </Button>
+                              </PopoverTrigger>
+                              <PopoverContent className="w-48 p-3 bg-card border-border">
+                                <div className="space-y-2">
+                                  <div className="flex justify-between">
+                                    <span className="text-xs font-medium">Speed</span>
+                                    <span className="text-xs text-primary font-bold">{scrollSpeed}</span>
+                                  </div>
+                                  <input
+                                    type="range"
+                                    min="30"
+                                    max="180"
+                                    value={scrollSpeed}
+                                    onChange={(e) => setScrollSpeed(Number(e.target.value))}
+                                    className="w-full h-1.5 bg-secondary rounded-lg appearance-none cursor-pointer accent-primary"
+                                  />
+                                </div>
+                              </PopoverContent>
+                            </Popover>
                           </div>
-                        )}
-                      </div>
+                        </div>
 
-                      {/* Two Column Mode Toggle */}
-                      <div className="space-y-2">
-                        <label className="text-sm text-muted-foreground">Layout</label>
-                        <Button
-                          variant={twoColumnMode ? "default" : "outline"}
-                          size="sm"
-                          onClick={() => setTwoColumnMode(!twoColumnMode)}
-                          className="w-full rounded-sm h-9"
-                        >
-                          <Columns2 className="w-3.5 h-3.5 mr-1.5" />
-                          {twoColumnMode ? "Single Column" : "Two Columns"}
-                        </Button>
+                        {/* Layout Toggle */}
+                        <div className="space-y-2">
+                          <label className="text-[10px] uppercase font-bold text-muted-foreground tracking-tight">Layout</label>
+                          <Button
+                            variant={twoColumnMode ? "default" : "outline"}
+                            size="sm"
+                            onClick={() => setTwoColumnMode(!twoColumnMode)}
+                            className="w-full rounded-sm h-10"
+                          >
+                            <Columns2 className="w-4 h-4" />
+                          </Button>
+                        </div>
                       </div>
 
                       {/* Text Size Control */}
                       <div className="space-y-2">
-                        <label className="text-sm text-muted-foreground">Text Size: {textSize}px</label>
-                        <input
-                          type="range"
-                          min="12"
-                          max="24"
-                          value={textSize}
-                          onChange={(e) => setTextSize(Number(e.target.value))}
-                          className="w-full"
-                        />
-                      </div>
-                    </CardContent>
-                  </Card>
-
-                  <Card className="rounded-sm border-border shadow-none">
-                    <CardHeader className="pb-3">
-                      <h3 className="text-sm font-semibold text-foreground">Quick Info</h3>
-                    </CardHeader>
-                    <CardContent className="space-y-3">
-                      <div className="flex justify-between items-center">
-                        <span className="text-sm text-muted-foreground">Genre</span>
-                        <span className="text-sm font-medium text-foreground">{song.tags[0] || "Folk"}</span>
-                      </div>
-                      <div className="flex justify-between items-center">
-                        <span className="text-sm text-muted-foreground">Difficulty</span>
-                        <span className="text-sm font-medium text-foreground">Beginner</span>
-                      </div>
-                      <div className="flex justify-between items-center">
-                        <span className="text-sm text-muted-foreground">Chords Count</span>
-                        <span className="text-sm font-medium text-foreground">{uniqueChords.length}</span>
+                        <label className="text-[10px] uppercase font-bold text-muted-foreground tracking-tight">Text Appearance</label>
+                        <div className="flex items-center gap-2 bg-secondary/50 p-1 rounded-sm border border-border">
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => setTextSize(Math.max(10, textSize - 1))}
+                            className="h-8 w-8 p-0 rounded-sm hover:bg-background"
+                          >
+                            <Minus className="w-3 h-3" />
+                          </Button>
+                          <div className="flex-1 flex items-center justify-center gap-1.5">
+                            <Type className="w-3 h-3 text-muted-foreground" />
+                            <span className="text-xs font-bold">{textSize}px</span>
+                          </div>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => setTextSize(Math.min(32, textSize + 1))}
+                            className="h-8 w-8 p-0 rounded-sm hover:bg-background"
+                          >
+                            <Plus className="w-3 h-3" />
+                          </Button>
+                        </div>
                       </div>
                     </CardContent>
                   </Card>
@@ -314,12 +324,12 @@ export function SongViewer({ song, onUpdateSong, onBack }: SongViewerProps) {
                         </TabsTrigger>
                       </TabsList>
                       <TabsContent value="tuner" className="mt-0">
-                        <CardContent className="pt-4">
+                        <CardContent className="pt-4 px-4 pb-4">
                           <Tuner />
                         </CardContent>
                       </TabsContent>
                       <TabsContent value="metronome" className="mt-0">
-                        <CardContent className="pt-4">
+                        <CardContent className="pt-4 px-4 pb-4">
                           <Metronome />
                         </CardContent>
                       </TabsContent>
